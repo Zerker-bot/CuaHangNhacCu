@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace CuaHangNhacCu.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+  
     public class BrandsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -43,7 +43,7 @@ namespace CuaHangNhacCu.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            return View(brand);
+            return PartialView(brand);
         }
 
         // GET: Admin/Brands/Create
@@ -81,7 +81,7 @@ namespace CuaHangNhacCu.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            return View(brand);
+            return PartialView(brand);
         }
 
         // POST: Admin/Brands/Edit/5
@@ -134,7 +134,7 @@ namespace CuaHangNhacCu.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            return View(brand);
+            return PartialView(brand);
         }
 
         // POST: Admin/Brands/Delete/5

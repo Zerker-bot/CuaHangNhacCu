@@ -31,9 +31,25 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a hx-get="@Url.Action("Edit", new { id = item.Id })"
+                       hx-target="#main-content"
+                       hx-swap="innerHTML"
+                       style="cursor: pointer;">
+                        Edit
+                    </a> |         
+                    <a hx-get="@Url.Action("Details", new { id = item.Id })"
+                       hx-target="#main-content"
+                       hx-swap="innerHTML"
+                       style="cursor: pointer;">
+                        Details
+                    </a>|
+                    <a hx-get="@Url.Action("Delete", new { id = item.Id })"
+                       hx-target="#main-content"
+                       hx-swap="innerHTML"
+                       style="cursor: pointer;">
+                        Delete
+                    </a>
+              
             </td>
         </tr>
 }
