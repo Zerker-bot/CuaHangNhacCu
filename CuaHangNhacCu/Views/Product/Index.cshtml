@@ -1,0 +1,214 @@
+@using CuaHangNhacCu.ViewModels.Product
+@model ProductIndex
+@{
+  ViewData["Title"] = "Danh sách sản phẩm";
+}
+@section Styles {
+  <link href="css/customer/product/index.css" rel="stylesheet">
+}
+  <section class="py-4 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="section-title display-5 fw-bold text-dark mb-0">Danh sách sản phẩm</h1>
+            </div>
+            <div class="col-lg-4">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="fas fa-search text-gold"></i>
+                    </span>
+                    <form method="GET">
+                    <input name="q" type="text" class="form-control ps-2" placeholder="Tìm kiếm nhạc cụ..." value="@Model.Search" /> 
+                    <input type="submit" hidden />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="sticky-top" style="top: 100px;">
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-0">
+                        <h5 class="card-title mb-0 fw-bold text-dark">
+                            <i class="fas fa-filter me-2 text-gold"></i>Lọc
+                        </h5>
+                    </div>
+
+                    <form method="GET">
+                    <div class="card-body p-0">
+                        <div class="border-bottom">
+                            <h6 class="px-3 py-3 mb-0 fw-semibold text-dark">Danh mục</h6>
+                            <div class="p-3">
+
+                            @foreach (var category in Model.Categories)
+                            {
+                              bool isChecked = Model.Cat.Contains(category.Id);
+
+                              <div class="form-check mb-2">
+                                <input name="cat" class="form-check-input" type="checkbox" id="cat@category.Id" value="@category.Id" checked="@isChecked">
+                                <label class="form-check-label text-muted" for="cat@category.Id">
+                                @category.Name                               
+                                </label>
+                              </div>
+                            }
+                            </div>
+                        </div>
+
+                        <div class="border-bottom">
+                            <h6 class="px-3 py-3 mb-0 fw-semibold text-dark">Giá</h6>
+                            <div class="p-3">
+                                <div class="mb-3">
+                                    <input name="maxPrice" type="range" class="form-range" min="0" max="100000000" step="1000000" value="@Model.MaxPrice" id="priceRange">
+                                    <div class="d-flex justify-content-between small text-muted">
+                                        <span>0</span>
+                                        <span class="fw-bold text-gold" id="priceValue">10.000.000 đ</span>
+                                        <span>50.000.000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-3">
+                            <h6 class="mb-0 fw-semibold text-dark">Thương hiệu</h6>
+                            @foreach (var brand in Model.Brands)
+                            {
+
+                              bool isChecked = Model.Brand.Contains(brand.Id);
+
+                              <div class="form-check mt-2">
+                                <input name="brand" class="form-check-input" type="checkbox" id="brand@brand.id" value="@brand.Id" checked="@isChecked">
+                                <label class="form-check-label text-muted" for="brand@brand.id">
+                                @brand.Name
+                              </label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <button class="btn btn-gold w-100">
+                            <i class="fas fa-sync-alt me-2"></i>Áp dụng
+                        </button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center">
+                    <span class="text-muted me-2">Sort:</span>
+                    <form method="get">
+                    <select name="sortOrder" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
+                      <option value="latest" selected="@(Model.SortOrd == "latest")">Mới</option>
+                      <option value="price" selected="@(Model.SortOrd == "price")">Giá: thấp đến cao</option>
+                      <option value="price_desc" selected="@(Model.SortOrd == "price_desc")">Giá: Cao đến thấp</option>
+                    </select>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row g-4" id="productsGrid">
+            
+            @if (Model.Products.Any())
+            {
+              @foreach (var product in Model.Products)
+               {
+
+                var primaryImage = product.Images?.FirstOrDefault(e => e.IsPrimary);
+                var imageUrl = primaryImage?.Url ?? "/images/no-image.png";
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="card product-card h-100">
+                        <img src="@imageUrl"
+                             class="card-img-top" alt="@product.Name">
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate text-nowrap">@product.Name</h5>
+                            <p class="card-text text-muted small">@product.Category.Name</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="h5 text-dark fw-bold">
+                                        @product.Price.ToString("C", new System.Globalization.CultureInfo("vi-VN"))
+                                    </span>
+                                </div>
+                                <a asp-action="Detail" asp-route-id="@product.Id" class="btn btn-gold px-3">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               } 
+            }       
+            else
+            {
+              <div class="col-12">
+                <div class="text-center py-5">
+                <i class="fas fa-music fa-3x text-gold mb-3"></i>
+                <h3 class="text-dark">Không tìm thấy sản phẩm nào</h3>
+                <p class="text-muted">Hãy thử tìm bằng từ khóa khác</p>
+                </div>
+                </div>
+            }
+            </div>
+            @if (Model.Pagination.HasOtherPage)
+            {
+            <nav aria-label="Product pagination" class="mt-5">
+                <ul class="pagination justify-content-center">
+                @if (Model.Pagination.HasPreviousPage)
+                {
+                  <li class="page-item">
+                    <a class="page-link text-gold" href="">First</a>
+                    </li>
+                    <li class="page-item">
+                    <a class="page-link text-gold" href="">
+                    <i class="fas fa-chevron-left"></i>
+                    </a>
+                    </li>
+                }
+                    <li class="page-item active">
+                        <span class="page-link bg-gold text-black">num</span>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link text-gold" href="">num</a>
+                    </li>
+                    @if (Model.Pagination.HasNextPage)
+                    {
+                      <li class="page-item">
+                        <a class="page-link text-gold" href="">
+                        <i class="fas fa-chevron-right"></i>
+                        </a>
+                        </li>
+                        <li class="page-item">
+                        <a class="page-link text-gold" href="">Last</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const priceRange = document.getElementById('priceRange');
+    const priceValue = document.getElementById('priceValue');
+    
+    priceRange.addEventListener('input', function() {
+        const formatted = new Intl.NumberFormat('vi-VN').format(this.value.toLocaleString());
+        priceValue.textContent = formatted + 'đ' ;
+    });
+});
+</script>
+}
+
+
+

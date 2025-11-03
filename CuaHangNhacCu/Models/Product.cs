@@ -20,7 +20,7 @@ public class Product
     public DateTime? UpdatedAt { get; set; }
     public int CategoryId { get; set; }
     public Category Category { get; set; }
-    public int? BrandId { get; set; }
+    public int BrandId { get; set; }
     public Brand Brand { get; set; }
     public int? SupplierId { get; set; }
     public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
