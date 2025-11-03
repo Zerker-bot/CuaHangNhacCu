@@ -18,8 +18,14 @@ dotnet ef database update
 ### Tạo tài khoản Admin
 
 1. Đảm bảo đã điền thông tin Admin trong file `appsettings.json`
-3. Chạy lệnh
+2. Chạy lệnh
 ```bash
 dotnet run -- seed-admin
+```
+
+### Tạo dữ liệu mẫu
+
+```bash
+dotnet run -- seed-data
 ```
 
