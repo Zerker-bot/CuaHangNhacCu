@@ -14,6 +14,8 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddAuthServices();
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
+
 
 var app = builder.Build();
 
