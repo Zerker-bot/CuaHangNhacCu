@@ -11,7 +11,7 @@ public static class AuthService
         this IServiceCollection services
     ) 
     {
-        services.AddIdentity<User, IdentityRole>()
+        services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
