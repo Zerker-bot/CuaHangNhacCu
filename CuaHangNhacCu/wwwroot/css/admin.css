@@ -1,3 +1,6 @@
+html:not(.sidebar-ready) body {
+    visibility: hidden;
+}
 body {
     font-family: 'Segoe UI', sans-serif;
     background-color: #f8f9fa;
@@ -16,9 +19,6 @@ body {
     transition: transform 0.3s ease-in-out;
 }
 
-    .sidebar.collapsed {
-        transform: translateX(-100%);
-    }
 
 .brand-title {
     font-size: 1.75rem;
@@ -72,10 +72,7 @@ body {
     padding: 1.5rem 2rem;
     transition: margin-left 0.3s ease-in-out;
 }
-
-    .content.collapsed {
-        margin-left: 0;
-    }
+}
 
 .header {
     display: flex;
@@ -171,4 +168,14 @@ body {
     padding: 1.5rem;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     margin-bottom: 1.5rem;
+}
+html.sidebar-collapsed .sidebar {
+    transform: translateX(-100%);
+}
+html.sidebar-collapsed .content {
+    margin-left: 0;
+}
+.sidebar,
+.content {
+    transition: transform 0.3s ease-in-out, margin-left 0.3s ease-in-out;
 }

@@ -43,7 +43,7 @@ namespace CuaHangNhacCu.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            return PartialView(brand);
+            return View(brand);
         }
 
         // GET: Admin/Brands/Create
@@ -81,7 +81,7 @@ namespace CuaHangNhacCu.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            return PartialView(brand);
+            return View(brand);
         }
 
         // POST: Admin/Brands/Edit/5
@@ -134,7 +134,7 @@ namespace CuaHangNhacCu.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            return PartialView(brand);
+            return View(brand);
         }
 
         // POST: Admin/Brands/Delete/5
