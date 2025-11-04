@@ -96,7 +96,25 @@ public class ProductController : Controller
 
     public async Task<IActionResult> Detail(int id)
     {
-        return View();
+        var product = await _ctx.Products
+            .Include(e => e.Images)
+            .Include(e => e.Brand)
+            .Include(e => e.Category)
+            .Include(e => e.Reviews)
+            .ThenInclude(e => e.User)
+            .FirstOrDefaultAsync(e => e.Id == id);
+
+        if(product is null)
+        {
+            return NotFound();
+        };
+
+        var viewModel = new ProductDetail() 
+        {
+            Product = product
+        };
+
+        return View(viewModel);
     }
 
 }
