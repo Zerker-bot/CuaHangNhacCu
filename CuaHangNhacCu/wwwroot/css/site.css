@@ -20,3 +20,10 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+:root {
+  --gold: #D4AF37;
+  --gold-dark: #B8860B;
+  --black: #1a1a1a;
+  --dark-gray: #2c2c2c;
+}
