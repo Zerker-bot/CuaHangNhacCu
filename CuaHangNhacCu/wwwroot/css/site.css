@@ -29,3 +29,22 @@ body {
 
   --blue: #258cfb;
 }
+
+
+.btn-gold {
+  background: var(--gold);
+  border: var(--gold);
+  color: var(--black);
+  font-weight: 600;
+  padding: 15px 40px;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+}
+
+.btn-gold:hover {
+  background: var(--gold-dark);
+  border-color: var(--gold-dark);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+}
