@@ -128,20 +128,7 @@
                         localStorage.setItem("sidebar-collapsed", collapsedNow);
                     });
                 }
-            });
-
-        document.addEventListener("DOMContentLoaded", function () {
-            const currentUrl = window.location.pathname.toLowerCase();
-
-            document.querySelectorAll('.nav-link').forEach(link => {
-                const href = link.getAttribute('href')?.toLowerCase();
-                if (href && currentUrl.includes(href) && href !== "#") {
-                    link.classList.add('active');
-                    link.classList.remove('text-muted');
-                } else {
-                    link.classList.remove('active');
-                }
-            });
+            });  
         });
     </script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>

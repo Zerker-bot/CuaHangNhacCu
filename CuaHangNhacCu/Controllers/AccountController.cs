@@ -71,6 +71,7 @@ namespace CuaHangNhacCu.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "Customer");
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToLocal(returnUrl);
                 }
