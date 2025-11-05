@@ -13,11 +13,13 @@ namespace CuaHangNhacCu.Areas.Admin.Models
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng nhập số điện thoại")]
+        [Required]
         [Display(Name = "Số điện thoại")]
+        [RegularExpression(@"^(0|\+84)[0-9]{9}$", ErrorMessage = "Số điện thoại không hợp lệ")]
         public string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]
+        [Required]
+        [StringLength(100, ErrorMessage = "{0} phải có ít nhất {2} và tối đa {1} ký tự.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Mật khẩu")]
         public string Password { get; set; }

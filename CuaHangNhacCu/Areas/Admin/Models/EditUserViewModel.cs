@@ -15,8 +15,9 @@ namespace CuaHangNhacCu.Areas.Admin.Models
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng nhập số điện thoại")]
+        [Required]
         [Display(Name = "Số điện thoại")]
+        [RegularExpression(@"^(0|\+84)[0-9]{9}$", ErrorMessage = "Số điện thoại không hợp lệ")]
         public string PhoneNumber { get; set; }
 
         [Display(Name = "Vai trò hiện tại")]

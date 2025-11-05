@@ -1,0 +1,22 @@
+@model Product
+@{
+  var product = Model;
+}
+<div class="gallery">
+  <div class="main-image">
+
+   @{
+      var primaryImage = product.Images?.FirstOrDefault(e => e.IsPrimary);
+      var imageUrl = primaryImage?.Url ?? "/images/no-image.png";
+   }
+    <img id="main-image" src="/@imageUrl" 
+                class="img-fluid rounded-4 shadow-lg" alt="@product.Name">
+  </div>
+  <div class="thumbnails">
+      @foreach (var image in product.Images ?? [])
+      {
+        <img src="/@image.Url" onclick="showImage(this)" class="@(imageUrl == image.Url ? "active" : "")">
+      }
+  </div>
+</div>
+
