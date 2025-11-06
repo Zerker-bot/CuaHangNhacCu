@@ -1,4 +1,4 @@
-using CuaHangNhacCu.Models;
+﻿using CuaHangNhacCu.Models;
 using CuaHangNhacCu.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -62,7 +62,8 @@ namespace CuaHangNhacCu.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new User {
+                var user = new User
+                {
                     UserName = model.Email,
                     Email = model.Email,
                     FullName = model.FullName,
@@ -85,9 +86,12 @@ namespace CuaHangNhacCu.Controllers
         public async Task<IActionResult> Logout(string? returnUrl = null)
         {
             await _signInManager.SignOutAsync();
-            if(string.IsNullOrEmpty(returnUrl)) {
+            if (string.IsNullOrEmpty(returnUrl))
+            {
                 return RedirectToAction(nameof(HomeController.Index), "Home");
-            } else {
+            }
+            else
+            {
                 return RedirectToLocal(returnUrl);
             }
         }
