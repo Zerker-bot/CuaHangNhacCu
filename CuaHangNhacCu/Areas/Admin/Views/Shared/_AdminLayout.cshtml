@@ -28,7 +28,8 @@
         <div class="sidebar-heading">Menu</div>
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
-                <a  class="nav-link active">
+                <a asp-controller="Dashboard" asp-action="Index" 
+                class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "") ">
                     <i class="bi bi-grid-fill"></i> Dashboard
                 </a>
             </li>
@@ -38,13 +39,15 @@
                 </a>
             </li>
             <li>
-                <a asp-controller="Brands" asp-action="Index" class="nav-link ">
+                <a asp-controller="Brands" asp-action="Index"
+                   class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Brands" ? "active" : "") ">
                     <i class="bi bi-badge-tm" ></i> Thương hiệu
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link text-muted">
-                    <i class=""></i> Danh mục
+                <a asp-controller="Categories" asp-action="Index"
+                   class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Categories" ? "active" : "") ">
+                    <i class="bi bi-music-note-list"></i> Danh mục
                 </a>
             </li>
             <li>
@@ -125,9 +128,7 @@
                         localStorage.setItem("sidebar-collapsed", collapsedNow);
                     });
                 }
-            });
-
-
+                    });
     </script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     @await RenderSectionAsync("Scripts", required: false)
