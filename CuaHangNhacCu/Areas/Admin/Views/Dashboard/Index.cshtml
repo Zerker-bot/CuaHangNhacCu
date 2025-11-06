@@ -1,0 +1,106 @@
+﻿@model CuaHangNhacCu.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+<div class="container-fluid mt-3">
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="widget-card bg-primary text-white" style="background-color: #0d6efd !important;">
+                <h6 class="text-uppercase text-white-50">Tổng Khách hàng</h6>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="display-4 font-weight-bold">@Model.TotalCustomers</h1>
+                    <i class="bi bi-people-fill" style="font-size: 3rem;"></i>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="widget-card bg-info text-white" style="background-color: #0dcaf0 !important;">
+                <h6 class="text-uppercase text-white-50">Đơn hàng tuần này</h6>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="display-4 font-weight-bold">@Model.TotalOrdersInWeek</h1>
+                    <i class="bi bi-cart-check-fill" style="font-size: 3rem;"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="widget-card bg-success text-white" style="background-color: #198754 !important;">
+                <h6 class="text-uppercase text-white-50">Lợi nhuận tháng này</h6>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="display-4 font-weight-bold">@Model.TotalProfitInMonth.ToString("N0") VNĐ</h1>
+                 
+                </div>
+            </div>
+        </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="widget-card">
+                <h5 class="card-title">4. Top 10 Sản phẩm bán chạy</h5>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Sản phẩm</th>
+                            <th>Số lượng bán</th>
+                            <th>Giá (VNĐ)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.BestSellingProducts.Count; i++)
+                        {
+                            var item = Model.BestSellingProducts[i];
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@item.ProductName</td>
+                                <td><strong>@item.TotalQuantitySold</strong></td>
+                                <td>@item.Price.ToString("N0")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="widget-card">
+                <h5 class="card-title m-2">Tỷ lệ sản phẩm theo danh mục</h5>
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+            const colors = [
+                '#0d6efd', '#20c997', '#ffc107', '#dc3545', '#6f42c1',
+                '#fd7e14', '#198754', '#17a2b8', '#e83e8c', '#adb5bd',
+                '#ff6f61', '#8e44ad', '#27ae60', '#2980b9', '#f39c12',
+                '#c0392b', '#9b59b6', '#2ecc71', '#f1c40f', '#34495e'
+            ];
+        const categoryData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ProductCountByCategory));
+            new Chart(document.getElementById('categoryChart'), {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(categoryData),
+                    datasets: [{
+                        data: Object.values(categoryData),
+                        backgroundColor: colors,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        
+                    }
+                }
+            });
+    </script>
+}
