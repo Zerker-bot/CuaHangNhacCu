@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
 namespace CuaHangNhacCu.Models;
@@ -7,6 +7,7 @@ public class Product
 {
     public int Id { get; set; }
     [Required, MaxLength(200)]
+    [Display(Name = "Tên sản phẩm")]
     public string Name { get; set; }
     [MaxLength(1000)]
     public string Description { get; set; }

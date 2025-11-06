@@ -4,8 +4,8 @@ namespace CuaHangNhacCu.Models;
 
 public class Brand
 { 
-        public int Id { get; set; }
-        [Required, MaxLength(100)]
+    public int Id { get; set; }
+    [Required, MaxLength(100)]
     [Display(Name = "Tên thương hiệu")]
     public string? Name { get; set; }
     [Display(Name = "Mô tả")]
