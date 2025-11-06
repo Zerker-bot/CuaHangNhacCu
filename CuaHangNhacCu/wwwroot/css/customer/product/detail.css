@@ -24,15 +24,6 @@
 }
 
 
-.star-rating i:hover,
-.star-rating i:hover~i {
-  color: #ffd700 !important;
-}
-
-.star-rating i.selected {
-  color: #ffd700 !important;
-}
-
 .input-group .btn {
   border-radius: 0;
 }
