@@ -1,0 +1,73 @@
+﻿@model CuaHangNhacCu.Areas.Admin.Models.AdminProfileViewModel
+@{
+    ViewData["Title"] = "Thông tin Admin";
+}
+
+<h1 class="text-center">@ViewData["Title"]</h1>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <form asp-action="Index" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3 text-center">
+                <img src="https://avatar.iran.liara.run/public/43" alt="Avatar Admin" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="FullName" class="control-label"></label>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
+            </div>
+        </form>
+
+        <hr />
+
+        <h3>Địa chỉ nhà</h3>
+        <div class="card mb-4">
+            <div class="card-body">
+                <form asp-action="UpdateAddress" asp-controller="Profile" method="post">
+                    <input type="hidden" name="AddressId" value="@(Model.HomeAddress?.Id ?? 0)" />
+
+                    <div class="form-group mb-3">
+                        <label class="control-label">Đường/Số nhà</label>
+                        <input name="Line1" class="form-control" value="@Model.HomeAddress?.Line1" required />
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="control-label">Thành phố</label>
+                        <input name="City" class="form-control" value="@Model.HomeAddress?.City" required />
+                    </div>
+                    <input type="submit" value="Lưu Địa chỉ" class="btn btn-sm btn-primary mt-2" />
+                </form>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="mb-3">
+            <h5>Đổi mật khẩu</h5>
+            <p>Bảo mật tài khoản của bạn bằng mật khẩu mới.</p>
+            <a asp-controller="Profile" asp-action="ChangePassword" class="btn btn-outline-secondary">Đổi mật khẩu</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
