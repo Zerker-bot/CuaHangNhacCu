@@ -60,6 +60,12 @@ public class ApplicationDbContext : IdentityDbContext<User>
             .Property(o => o.Discount)
             .HasPrecision(18, 2);
 
+        builder.Entity<Order>()
+            .HasOne(o => o.User)
+            .WithMany(u => u.Orders)
+            .HasForeignKey(o => o.UserId)
+            .OnDelete(DeleteBehavior.ClientSetNull);
+
         builder.Entity<CartItem>()
             .HasOne(ci => ci.Cart)
             .WithMany(c => c.Items)
@@ -73,13 +79,14 @@ public class ApplicationDbContext : IdentityDbContext<User>
         builder.Entity<Review>()
             .HasOne(r => r.User)
             .WithMany(u => u.Reviews)
-            .HasForeignKey(r => r.UserId);
+            .HasForeignKey(r => r.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        // builder.Entity<Address>()
-        //     .HasOne(a => a.User)
-        //     .WithMany(u => u.Addresses)
-        //     .HasForeignKey(a => a.User);
-
+        builder.Entity<Address>()
+            .HasOne(a => a.User)
+            .WithMany(u => u.Addresses)
+            .HasForeignKey(a => a.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<IdentityRole>().HasData(
             new IdentityRole()
