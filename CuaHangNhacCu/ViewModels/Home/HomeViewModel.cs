@@ -5,3 +5,4 @@ public class HomeViewModel
     public List<Models.Product> Products { get; set; }
 }
 
+    
