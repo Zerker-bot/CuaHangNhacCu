@@ -109,9 +109,20 @@
                         </h5>
                         </div>
                         <div class="card-body">
-                        <form method="post" action="{% url 'add_comment' product.id %}">
+                        <form method="post" asp-action="CreateReview" asp-controller="Product" asp-route-productId="@product.Id">
+                            <div class="mb-3">
+                              <label for="rating" class="form-label fw-semibold text-dark mb-2 fs-6">Đánh giá của bạn</label>
+                              <input name="rating" type="number" id="rating" hidden/>
+                              <div class="star-rating">
+                              <i class="bi bi-star text-gold" data-rating="1"></i>
+                              <i class="bi bi-star text-gold" data-rating="2"></i>
+                              <i class="bi bi-star text-gold" data-rating="3"></i>
+                              <i class="bi bi-star text-gold" data-rating="4"></i>
+                              <i class="bi bi-star text-gold" data-rating="5"></i>
+                              </div>
+                            </div>
                       <div class="mb-3">
-                        <textarea name="text" class="form-control" rows="4" placeholder="Share your experience with this product..." required></textarea>
+                        <textarea name="content" class="form-control" rows="4" placeholder="Share your experience with this product..." required></textarea>
                         </div>
                         <button type="submit" class="btn btn-gold">
                         <i class="fas fa-paper-plane me-2"></i>Đăng
@@ -205,5 +216,27 @@
       input.value = value;
     });
   });
+
+    const stars = document.querySelectorAll('.star-rating i');
+    const ratingInput = document.getElementById('rating');
+    
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            const rating = this.dataset.rating;
+            ratingInput.value = rating;
+            
+            stars.forEach(s => {
+                s.classList.remove('bi-star-fill');
+                s.classList.remove('bi-star');
+            });
+            stars.forEach((s, index) => {
+                if (index < rating) {
+                s.classList.add('bi-star-fill');
+                } else {
+                s.classList.add('bi-star');
+                }
+            });
+        });
+    });
 </script>
 }

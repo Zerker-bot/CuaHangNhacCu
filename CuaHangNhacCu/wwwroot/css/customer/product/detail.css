@@ -19,18 +19,10 @@
   border-radius: 15px 15px 0 0;
 }
 
-.nav-tabs-custom .nav-link:hover {
+.nav-tabs-custom .nav-link:hover:not(.active) {
   color: var(--gold);
 }
 
-.star-rating i:hover,
-.star-rating i:hover~i {
-  color: #ffd700 !important;
-}
-
-.star-rating i.selected {
-  color: #ffd700 !important;
-}
 
 .input-group .btn {
   border-radius: 0;
@@ -109,4 +101,8 @@
 
 .text-gold {
   color: var(--gold);
+}
+
+.star-rating {
+  font-size: 1.6em;
 }

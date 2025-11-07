@@ -1,8 +1,135 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "CuaHangNhacCu";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section id="home" class="hero-section">
+        <div class="container">
+            <div class="row align-items-center min-vh-80 justify-content-center">
+                <div class="col-lg-8">
+                    <h1 class="hero-h1 mb-4 text-center">Your Musical Masterpiece Awaits</h1>
+                    <p class="lead fs-4 mb-5 opacity-90 text-center">Premium instruments crafted for the discerning musician</p>
+                    <div class="d-flex flex-row justify-content-center">
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-gold btn-lg">
+                        <i class="fas fa-crown me-2"></i>Discover Collection
+                    </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="categories" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title display-4 fw-bold text-dark mb-3">Shop by Category</h2>
+                <p class="lead text-muted">Curated collections for every musical passion</p>
+            </div>
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-3 col-md-6">
+                    <div class="card category-card text-center h-100">
+                        <div class="card-body py-5">
+                            <div class="category-icon mb-3"><i class="fas fa-guitar"></i></div>
+                            <h5 class="card-title">Guitars</h5>
+                            <p class="text-muted">Acoustic & Electric</p>
+                            <a
+                            asp-controller="Product"
+                            asp-action="Index"
+                            asp-route-cat="2"
+                              class="btn btn-outline-dark"
+                            >Explore</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card category-card text-center h-100">
+                        <div class="card-body py-5">
+                            <div class="category-icon mb-3"><i class="fas fa-drum"></i></div>
+                            <h5 class="card-title">Drums</h5>
+                            <p class="text-muted">Complete Sets</p>
+                            <a
+                            asp-controller="Product"
+                            asp-action="Index"
+                            asp-route-cat="3"
+                              class="btn btn-outline-dark"
+                            >Explore</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card category-card text-center h-100">
+                        <div class="card-body py-5">
+                            <div class="category-icon mb-3">
+                              <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                              <path
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M22 21C23.1046 21 24 20.1046 24 19V5C24 3.89543 23.1046 3 22 3H3C1.89543 3 1 3.89543 1 5V19C1 20.1046 1.89543 21 3 21H22ZM11 5H8.98486V13H7.98511V19H12V13H11V5ZM18.0151 19H22V5H19.0151V13H18.0151V19ZM17.0151 13H16.0151V5H14V13H13V19H17.0151V13ZM6.98511 19V13H5.98486V5H3L3 19H6.98511Z"
+                              >
+                              </path>
+                            </svg></div>
+                            <h5 class="card-title">Keyboards</h5>
+                            <p class="text-muted">Digital Pianos</p>
+                            <a
+                              asp-controller="Product"
+                              asp-action="Index"
+                              asp-route-cat="1"
+                              class="btn btn-outline-dark"
+                            >Explore</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card category-card text-center h-100">
+                        <div class="card-body py-5">
+                            <div class="category-icon mb-3">
+                            <svg
+                              version="1.1"
+                              id="Layer_1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              xmlns:xlink="http://www.w3.org/1999/xlink"
+                              viewBox="0 0 480 480"
+                              xml:space="preserve"
+                            ><path
+                              d="M385,299.997V240c0-39.112-25.078-72.477-60-84.859V60h10c5.523,0,10-4.477,10-10s-4.477-10-10-10h-10V20h10 c5.523,0,10-4.477,10-10s-4.477-10-10-10h-80c-5.523,0-10,4.477-10,10s4.477,10,10,10h10v20h-10c-5.523,0-10,4.477-10,10 s4.477,10,10,10h10v95.141c-34.922,12.381-60,45.746-60,84.859v59.997c-25.144,18.866-40,48.382-40,80.003 c0,55.14,44.86,100,100,100h60c55.14,0,100-44.86,100-100C425,348.379,410.144,318.863,385,299.997z M265,270h-10 c-5.523,0-10,4.477-10,10s4.477,10,10,10h10v170c-44.112,0-80-35.888-80-80c0-26.752,13.294-51.624,35.563-66.53 c2.772-1.856,4.437-4.973,4.437-8.31V240c0-27.87,16.369-51.987,40-63.241V270z M305,460h-20V290h20V460z M305,270h-20v-99.288 c6.534-0.938,13.466-0.938,20,0V270z M305,150.552c-3.285-0.365-6.62-0.552-10-0.552s-6.715,0.187-10,0.552V60h20V150.552z M305,40h-20V20h20V40z M325,460V290h10c5.523,0,10-4.477,10-10s-4.477-10-10-10h-10v-93.241c23.631,11.255,40,35.371,40,63.241 v65.16c0,3.337,1.665,6.454,4.437,8.31C391.706,328.376,405,353.248,405,380C405,424.112,369.112,460,325,460z"
+                            ></path> <path
+                              d="M105,410H95V10c0-5.523-4.477-10-10-10S75,4.477,75,10v400H65c-5.523,0-10,4.477-10,10s4.477,10,10,10h10v40 c0,5.523,4.477,10,10,10s10-4.477,10-10v-40h10c5.523,0,10-4.477,10-10S110.523,410,105,410z"
+                            ></path> <path
+                              d="M228.613,340.077c-4.595,3.063-5.837,9.272-2.773,13.867c2.963,4.445,4.018,9.778,2.971,15.017 c-1.048,5.238-4.073,9.755-8.518,12.719c-4.595,3.063-5.837,9.272-2.773,13.867c1.927,2.891,5.098,4.454,8.33,4.454 c1.906,0,3.833-0.544,5.538-1.681c8.89-5.926,14.94-14.96,17.035-25.437c2.096-10.477-0.015-21.143-5.941-30.033 C239.417,338.255,233.208,337.013,228.613,340.077z"
+                            ></path> <path d="M370.547,381.68c-4.445-2.963-7.47-7.48-8.518-12.719c-1.047-5.238,0.007-10.571,2.971-15.017 c3.063-4.595,1.822-10.804-2.773-13.867c-4.594-3.063-10.803-1.822-13.867,2.773c-5.927,8.89-8.037,19.556-5.941,30.033 c2.095,10.477,8.145,19.511,17.035,25.437c1.705,1.137,3.631,1.681,5.538,1.681c3.231,0,6.403-1.563,8.33-4.454 C376.384,390.952,375.142,384.743,370.547,381.68z"></path>
+                            </svg>
+                            </div>
+                            <h5 class="card-title">Violin</h5>
+                            <p class="text-muted">Premium Selection</p>
+                            <a
+                              asp-controller="Product"
+                              asp-action="Index"
+                              asp-route-cat="4"
+                              class="btn btn-outline-dark"
+                            >Explore</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="newsletter-section py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h3 class="display-6 fw-bold mb-3">Join Our Exclusive Circle</h3>
+                    <p class="lead mb-0 opacity-90">15% OFF your first purchase + VIP access</p>
+                </div>
+                <div class="col-lg-6">
+                    <form class="newsletter-form d-flex">
+                        <input type="email" class="form-control me-2 flex-grow-1" placeholder="Enter your email">
+                        <button type="submit" class="newsletter-btn px-4">Join</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
