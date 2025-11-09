@@ -49,7 +49,7 @@ namespace CuaHangNhacCu.Data.Seeder
             var order3 = new Order
             {
                 UserId = user.Id,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow,    
                 Status = OrderStatus.Shipped,
                 Items = new List<OrderItem> { new OrderItem { ProductId = product1.Id, Quantity = 1, UnitPrice = product1.Price } }
             };

@@ -1,5 +1,6 @@
 ﻿@model CuaHangNhacCu.Areas.Admin.Models.OrderIndexViewModel
 @using System.ComponentModel.DataAnnotations
+@using CuaHangNhacCu.ViewModels
 @using System.Reflection
 @{
     ViewData["Title"] = "Quản lý Đơn đặt hàng";
@@ -51,7 +52,9 @@
 
         @foreach (var order in Model.Orders)
         {
-            <tr>
+            string collapseId = $"collapse-{order.Id}";
+
+            <tr style="cursor: pointer;">
                 <td>@order.Id</td>
                 <td>@(order.User?.FullName ?? "N/A")</td>
                 <td>@order.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
@@ -60,31 +63,92 @@
                     <span class="badge bg-info">@GetDisplayName(order.Status)</span>
                 </td>
                 <td style="min-width: 250px;">
-                    <form asp-action="UpdateStatus" method="post" class="d-inline-flex">
+                    <form asp-action="UpdateStatus" method="post" class="d-inline-flex" onclick="event.stopPropagation();">
                         <input type="hidden" name="orderId" value="@order.Id" />
-
                         <select name="newStatus" class="form-select form-select-sm" style="width: auto;">
-
                             @foreach (var status in allStatuses)
                             {
                                 @if (order.Status == status)
                                 {
-                                    <option value="@status" selected>
-                                        @GetDisplayName(status)
-                                    </option>
+                                    <option value="@status" selected>@GetDisplayName(status)</option>
                                 }
                                 else
                                 {
-                                    <option value="@status">
-                                        @GetDisplayName(status)
-                                    </option>
+                                    <option value="@status">@GetDisplayName(status)</option>
                                 }
                             }
                         </select>
-
                         <button type="submit" class="btn btn-sm btn-primary ms-2">Lưu</button>
                     </form>
-                    <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-info ms-2">Chi tiết</a>
+
+                    <button class="btn btn-sm btn-info ms-2" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#@collapseId"
+                            aria-expanded="false" aria-controls="@collapseId"
+                            onclick="event.stopPropagation();">
+                        Chi tiết
+                    </button>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="6" class="p-0" style="border: none;">
+                    <div id="@collapseId" class="collapse">
+                        @{
+                            // 1. Tái sử dụng logic mapping DTO từ Task #7
+                            var dto = new OrderSummaryDto
+                            {
+                                OrderId = order.Id,
+                                CreatedAt = order.CreatedAt,
+                                Status = order.Status,
+                                Total = order.Total,
+                                ShippingFee = order.ShippingFee,
+                                Discount = order.Discount,
+                                Items = order.Items.Select(i => new OrderItemDto
+                                {
+                                    ProductId = i.ProductId,
+                                    Quantity = i.Quantity,
+                                    UnitPrice = i.UnitPrice,
+                                    ProductName = i.Product.Name
+                                }).ToList()
+                            };
+
+                            // 2. Tái sử dụng code HTML chi tiết từ Task #7
+                            // (Chỉ copy phần chi tiết, bỏ qua thanh hành động 'Hủy Đơn')
+                        }
+                        <div class="card-body details-section p-4" style="background-color: #fdfdfd;">
+                            <h6><i class="bi bi-file-text"></i> Chi tiết các mặt hàng đã đặt</h6>
+                            <ul class="list-group list-group-flush mb-4">
+                                @foreach (var item in dto.Items)
+                                {
+                                    <li class="list-group-item p-0" style="background: transparent;">
+                                        <div class="d-flex align-items-center">
+                                            <a asp-area="" asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId"
+                                               class="text-dark product-item text-dark text-decoration-none d-flex justify-content-between align-items-center w-100">
+                                                <strong>@item.ProductName</strong>
+                                                <span class="badge bg-secondary ms-2 text-center">@item.Quantity</span>
+                                                <span class="ms-auto">@item.UnitPrice.ToString("N0") VNĐ</span>
+                                            </a>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+
+                            <h6><i class="bi bi-wallet"></i> Tổng tiền</h6>
+                            <div class="row">
+                                <div class="col-6">Tổng giá trị sản phẩm:</div>
+                                <div class="col-6 text-end">
+                                    @dto.Items.Sum(i => i.UnitPrice * i.Quantity).ToString("N0") VNĐ
+                                </div>
+                                <div class="col-6">Phí vận chuyển:</div>
+                                <div class="col-6 text-end text-muted">+ @dto.ShippingFee.ToString("N0") VNĐ</div>
+                                <div class="col-6 text-danger">Chiết khấu:</div>
+                                <div class="col-6 text-end text-danger">- @dto.Discount.ToString("N0") VNĐ</div>
+                                <div class="col-12"><hr class="my-2"></div>
+                                <div class="col-6 fw-bold">TỔNG CỘNG:</div>
+                                <div class="col-6 text-end fw-bold text-success">@dto.Total.ToString("N0") VNĐ</div>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
         }

@@ -23,10 +23,11 @@ namespace CuaHangNhacCu.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(OrderStatus status = OrderStatus.Pending)
         {
-            // Lấy danh sách order, lọc theo status
             var ordersQuery = _context.Orders
                                     .Where(o => o.Status == status)
-                                    .Include(o => o.User) 
+                                    .Include(o => o.User)
+                                    .Include(o => o.Items)
+                                        .ThenInclude(oi => oi.Product)
                                     .OrderByDescending(o => o.CreatedAt);
 
             var viewModel = new OrderIndexViewModel
