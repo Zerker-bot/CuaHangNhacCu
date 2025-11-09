@@ -62,6 +62,7 @@ public class DashboardController : Controller
          });
         // top 10
         viewModel.BestSellingProducts = await _context.OrderItems
+             .Where(oi => oi.Order.Status == OrderStatus.Delivered)
             .GroupBy(oi => oi.ProductId)
             .Select(g => new BestSellerDto
             {
