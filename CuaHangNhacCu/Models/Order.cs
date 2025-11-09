@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace CuaHangNhacCu.Models;
@@ -32,21 +33,17 @@ public class Order
 
  public enum OrderStatus
 {
-    [Display(Name = "Chờ xác nhận")]
+
+    [Display(Name = "Chờ xử lý")]
     Pending,
-
-    [Display(Name = "Đang xử lí")]
+    [Display(Name = "Đang xử lý")]
     Processing,
-
-    [Display(Name = "Đang ship")]
+    [Display(Name = "Đang vận chuyển")]
     Shipped,
-
-    [Display(Name = "Đã giao")]
+    [Display(Name = "Đã nhận hàng")]
     Delivered,
-
-    [Display(Name = "Đã hủy")]
-    Cancelled, // Tên enum "Cancelled" của bạn
-
-    [Display(Name = "Trả hàng")]
+    [Display(Name = "Đã huỷ")]
+    Cancelled,
+    [Display(Name = "Đã trả hàng")]
     Returned
 }
