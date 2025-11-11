@@ -13,14 +13,15 @@
     <div class="card-header bg-light">
         <h5 class="m-0">Thông tin thương hiệu</h5>
     </div>
+
     <div class="card-body">
         <form asp-action="Create" >
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="mb-3">
                 <label asp-for="Name" class="form-label"></label>
                 <input asp-for="Name" class="form-control" placeholder="Nhập tên thương hiệu" required/>
                 <span asp-validation-for="Name" class="text-danger"></span>
-
             </div>
 
             <div class="mb-3">
@@ -28,6 +29,7 @@
                 <textarea asp-for="Description" class="form-control" rows="4" placeholder="Nhập mô tả chi tiết" required></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div> 
+
             <div class="text-end">
                 <a asp-action="Index" class="btn btn-secondary me-2">Hủy</a>
                 <button type="submit" value="Create" class="btn btn-primary">Lưu thương hiệu</button>
