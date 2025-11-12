@@ -20,17 +20,26 @@ public class CliHandler
             case "seed-orders":
                 try
                 {
-                    await TestOrderSeeder.SeedOrdersAsync(services);
+                    await TestDataSeeder.SeedOrdersAsync(services);
                 }
                 catch (Exception ex) { Console.WriteLine("❌ Error: " + ex.Message); }
                 break;
             case "clear-orders":
                 try
                 {
-                    await TestOrderSeeder.ClearOrdersAsync(services);
+                    await TestDataSeeder.ClearOrdersAsync(services);
                 }
                 catch (Exception ex) { Console.WriteLine("❌ Error: " + ex.Message); }
                 break;
+            case "seed-cart":
+                try { await TestDataSeeder.SeedCartAsync(services); } 
+                catch (Exception ex) { Console.WriteLine("❌ Error: " + ex.Message); }
+                break;
+            case "clear-cart":
+                try { await TestDataSeeder.ClearCartAsync(services); } 
+                catch (Exception ex) { Console.WriteLine("❌ Error: " + ex.Message); }
+                break;
+
             default:
                 Console.WriteLine("Unknown Command");
                 break;
