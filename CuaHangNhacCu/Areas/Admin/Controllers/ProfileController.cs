@@ -122,6 +122,7 @@ namespace CuaHangNhacCu.Areas.Admin.Controllers
                     UserId = user.Id,
                     Line1 = model.Line1,
                     City = model.City,
+                    IsDefault = true
                 };
                 _context.Addresses.Add(newAddress);
             }

@@ -1,0 +1,128 @@
+﻿@model CuaHangNhacCu.ViewModels.Checkout.CheckoutViewModel
+@{
+    ViewData["Title"] = "Thanh toán";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="ConfirmPurchase" asp-controller="Checkout" method="post">
+    <div class="row">
+
+        <div class="col-md-7">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h4>Địa chỉ giao hàng</h4>
+                </div>
+                <div class="card-body">
+                    @if (Model.DefaultAddress == null && Model.TemporaryAddress == null)
+                    {
+                        <div class="alert alert-warning">
+                            Bạn chưa có địa chỉ. Vui lòng <a asp-controller="Profile" asp-action="Index">cập nhật hồ sơ</a>.
+                        </div>
+                    }
+
+                    @if (Model.DefaultAddress != null)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="SelectedAddressId" id="addr-default" value="@Model.DefaultAddress.Id" checked>
+                            <label class="form-check-label" for="addr-default">
+                                <strong>Địa chỉ mặc định:</strong>
+                                @Model.DefaultAddress.Line1, @Model.DefaultAddress.City
+                            </label>
+                        </div>
+                    }
+
+                    @if (Model.TemporaryAddress != null)
+                    {
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="radio" name="SelectedAddressId" id="addr-temp" value="@Model.TemporaryAddress.Id"
+                                   @(Model.DefaultAddress == null ? "checked" : "")>
+                            <label class="form-check-label" for="addr-temp">
+                                <strong>Địa chỉ tạm thời:</strong>
+                                @Model.TemporaryAddress.Line1, @Model.TemporaryAddress.City
+                            </label>
+                        </div>
+                    }
+                    <span asp-validation-for="SelectedAddressId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h4>Phương thức vận chuyển</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" checked disabled>
+                        <label class="form-check-label">
+                            Giao hàng tiêu chuẩn (Phí: @Model.ShippingFee.ToString("N0") VNĐ)
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h4>Phương thức thanh toán</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" checked disabled>
+                        <label class="form-check-label">
+                            Thanh toán khi nhận hàng (COD)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card" style="position: sticky; top: 20px;">
+                <div class="card-header">
+                    <h4>Tóm tắt đơn hàng (@Model.ItemsToPurchase.Count sản phẩm)</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        @foreach (var item in Model.ItemsToPurchase)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    @item.ProductName
+                                    <br>
+                                    <small class="text-muted">Số lượng: @item.Quantity</small>
+                                </div>
+                                <span>@item.TotalItemPrice.ToString("N0") VNĐ</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <span>Tạm tính:</span>
+                        <strong>@Model.Subtotal.ToString("N0") VNĐ</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Phí vận chuyển:</span>
+                        <strong>@Model.ShippingFee.ToString("N0") VNĐ</strong>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between h4">
+                        <span>Tổng cộng:</span>
+                        <strong>@Model.Total.ToString("N0") VNĐ</strong>
+                    </div>
+
+                    <div class="d-grid mt-3">
+                        <button type="submit" class="btn btn-primary btn-lg"
+                                @(Model.DefaultAddress == null && Model.TemporaryAddress == null ? "disabled" : "")>
+                            Xác nhận và Đặt hàng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

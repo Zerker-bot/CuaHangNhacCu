@@ -49,24 +49,31 @@
                         <strong>Số lượng trong kho:</strong>&nbsp;@product.Quantity  
                     </div>
 
-                    <div class="align-items-end mb-4 w-100">
-                        <div class="col-md-8 w-100">
-                            <label class="form-label fw-semibold text-dark mb-2 fs-6">Số lượng</label>
-                            <div class="input-group w-50">
-                                 <button class="btn btn-outline-dark border-gold quantity-btn" data-type="minus">-</button>
-                                  <input type="number" class="form-control text-center border-0 quantity-input" value="1" min="1">
-                                  <button class="btn btn-outline-dark border-gold quantity-btn" data-type="plus">+</button>
+                    <form asp-controller="Cart" asp-action="BuyNow" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" name="productId" value="@product.Id" />
+
+                        <div class="align-items-end mb-4 w-100">
+                            <div class="col-md-8 w-100">
+                                <label class="form-label fw-semibold text-dark mb-2 fs-6">Số lượng</label>
+                                <div class="input-group w-50">
+                                    <button class="btn btn-outline-dark border-gold quantity-btn" data-type="minus" type="button">-</button>
+                                    <input type="number" class="form-control text-center border-0 quantity-input" value="1" min="1" id="quantity-input" name="quantity">
+                                    <button class="btn btn-outline-dark border-gold quantity-btn" data-type="plus" type="button">+</button>
+                                </div>
+                            </div>
+                            <div class="col-md-4 w-100">
+                                <button class="btn btn-blue btn-md w-100" type="submit">
+                                    <i class="bi bi-handbag-fill me-2"></i>Mua ngay
+                                </button>
+
+                                <button class="btn btn-gold btn-md w-100" id="btn-add-to-cart" data-product-id="@product.Id" type="button">
+                                    <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ hàng
+                                </button>
                             </div>
                         </div>
-                        <div class="col-md-4 w-100">
-                            <button class="btn btn-blue btn-md w-100">
-                            <i class="bi bi-handbag-fill me-2"></i>Mua ngay
-                            </button>
-                            <button class="btn btn-gold btn-md w-100">
-                                <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ hàng
-                            </button>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -239,4 +246,53 @@
         });
     });
 </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.getElementById('btn-add-to-cart').addEventListener('click', function() {
+            var productId = this.dataset.productId;
+            var quantity = document.getElementById('quantity-input').value;
+
+            var token = document.querySelector('input[name="__RequestVerificationToken"]');
+            var headers = {};
+            if (token) {
+                headers['RequestVerificationToken'] = token.value;
+            }
+
+            fetch('/Cart/AddToCart', {
+                method: 'POST',
+                headers: {
+                    ...headers,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `productId=${productId}&quantity=${quantity}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    Swal.fire({
+                        title: "Thành công!",
+                        text: data.message,
+                        icon: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Lỗi!",
+                        text: data.message || "Không thể thêm vào giỏ hàng.",
+                        icon: "error"
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    title: "Lỗi!",
+                    text: "Đã xảy ra lỗi. Vui lòng thử lại.",
+                    icon: "error"
+                });
+            });
+        });
+    </script>
 }

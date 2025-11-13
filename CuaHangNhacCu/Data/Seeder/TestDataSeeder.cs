@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CuaHangNhacCu.Data.Seeder
 {
-    public class TestOrderSeeder
+    public class TestDataSeeder
     {
         public static async Task SeedOrdersAsync(IServiceProvider services)
         {
@@ -65,6 +65,65 @@ namespace CuaHangNhacCu.Data.Seeder
             await context.Database.ExecuteSqlRawAsync("DELETE FROM OrderItems");
             await context.Database.ExecuteSqlRawAsync("DELETE FROM Orders");
             Console.WriteLine("✅ All test orders cleared.");
+        }
+
+        public static async Task SeedCartAsync(IServiceProvider services)
+        {
+            var context = services.GetRequiredService<ApplicationDbContext>();
+            if (await context.Carts.AnyAsync())
+            {
+                Console.WriteLine("Carts already exist. Skipping test seed.");
+                return;
+            }
+
+            var userManager = services.GetRequiredService<UserManager<User>>();
+
+            var user = await userManager.FindByEmailAsync("customer1@example.com");
+            if (user == null)
+            {
+                Console.WriteLine("Test user 'customer1@example.com' not found. Run 'seed-data' first.");
+                return;
+            }
+
+            var product1 = await context.Products.FirstOrDefaultAsync(p => p.Name == "Yamaha Grand Piano");
+            var product2 = await context.Products.FirstOrDefaultAsync(p => p.Name == "Fender Stratocaster");
+            if (product1 == null || product2 == null)
+            {
+                Console.WriteLine("Test products not found. Run 'seed-data' first.");
+                return;
+            }
+
+            var cart = new Cart
+            {
+                UserId = user.Id
+            };
+            await context.Carts.AddAsync(cart);
+            await context.SaveChangesAsync();
+
+            var cartItem1 = new CartItem
+            {
+                CartId = cart.Id,
+                ProductId = product1.Id,
+                Quantity = 1
+            };
+            var cartItem2 = new CartItem
+            {
+                CartId = cart.Id,
+                ProductId = product2.Id,
+                Quantity = 2
+            };
+
+            await context.CartItems.AddRangeAsync(cartItem1, cartItem2);
+            await context.SaveChangesAsync();
+            Console.WriteLine("✅ Test cart seeded for customer1@example.com.");
+        }
+
+        public static async Task ClearCartAsync(IServiceProvider services)
+        {
+            var context = services.GetRequiredService<ApplicationDbContext>();
+            await context.Database.ExecuteSqlRawAsync("DELETE FROM CartItems");
+            await context.Database.ExecuteSqlRawAsync("DELETE FROM Carts");
+            Console.WriteLine("✅ All test carts cleared.");
         }
     }
 }

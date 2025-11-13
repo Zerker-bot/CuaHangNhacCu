@@ -1,18 +1,19 @@
-﻿
-using CuaHangNhacCu.Data;
+﻿using CuaHangNhacCu.Data;
 using CuaHangNhacCu.Models;
 using CuaHangNhacCu.ViewModels.Profile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq; 
+using System.Security.Claims;
+using System.Threading.Tasks; 
 
 namespace CuaHangNhacCu.Controllers
 {
     [Authorize]
     public class ProfileController : Controller
     {
-
         private readonly UserManager<User> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<User> _signInManager;
@@ -27,19 +28,22 @@ namespace CuaHangNhacCu.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return Challenge();
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null) { return Challenge(); }
+
+            var user = await _context.Users
+                                     .AsNoTracking()
+                                     .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null) { return Challenge(); }
 
             var userAddresses = await _context.Addresses
                                               .Where(a => a.UserId == user.Id)
+                                              .AsNoTracking() 
                                               .ToListAsync();
 
             var defaultAddress = userAddresses.FirstOrDefault(a => a.IsDefault);
             var temporaryAddress = userAddresses.FirstOrDefault(a => !a.IsDefault);
-
 
             var viewModel = new ProfileViewModel
             {
@@ -47,7 +51,6 @@ namespace CuaHangNhacCu.Controllers
                 FullName = user.FullName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
-
                 DefaultAddress = defaultAddress,
                 TemporaryAddress = temporaryAddress
             };
@@ -55,12 +58,17 @@ namespace CuaHangNhacCu.Controllers
             return View(viewModel);
         }
 
-        // POST: /Profile/Index (Cập nhật Tên và SĐT)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(ProfileViewModel model)
         {
-            var user = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Challenge();
+            }
+
+            var user = await _context.Users.FindAsync(userId);
             if (user == null)
             {
                 return Challenge();
@@ -69,8 +77,9 @@ namespace CuaHangNhacCu.Controllers
             async Task LoadAddressesAndAvatar(ProfileViewModel viewModel, User currentUser)
             {
                 var userAddresses = await _context.Addresses
-                                                  .Where(a => a.UserId == currentUser.Id)
-                                                  .ToListAsync();
+                                                .AsNoTracking() 
+                                                .Where(a => a.UserId == currentUser.Id)
+                                                .ToListAsync();
                 viewModel.DefaultAddress = userAddresses.FirstOrDefault(a => a.IsDefault);
                 viewModel.TemporaryAddress = userAddresses.FirstOrDefault(a => !a.IsDefault);
                 viewModel.AvatarUrl = "https://avatar.iran.liara.run/public/43";
@@ -89,6 +98,8 @@ namespace CuaHangNhacCu.Controllers
 
             if (result.Succeeded)
             {
+                await _signInManager.RefreshSignInAsync(user);
+
                 TempData["SuccessMessage"] = "Cập nhật thành công!";
                 return RedirectToAction(nameof(Index));
             }
@@ -99,7 +110,6 @@ namespace CuaHangNhacCu.Controllers
             }
 
             await LoadAddressesAndAvatar(model, user);
-
             return View(model);
         }
 
@@ -113,8 +123,8 @@ namespace CuaHangNhacCu.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
             {
                 return Challenge();
             }
@@ -123,7 +133,7 @@ namespace CuaHangNhacCu.Controllers
             {
                 var newAddress = new Address
                 {
-                    UserId = user.Id,
+                    UserId = userId,
                     Line1 = model.Line1,
                     Line2 = model.Line2,
                     City = model.City,
@@ -136,7 +146,7 @@ namespace CuaHangNhacCu.Controllers
             {
                 var existingAddress = await _context.Addresses.FindAsync(model.AddressId);
 
-                if (existingAddress == null || existingAddress.UserId != user.Id)
+                if (existingAddress == null || existingAddress.UserId != userId)
                 {
                     TempData["ErrorMessage"] = "Địa chỉ không tồn tại hoặc bạn không có quyền sửa.";
                     return RedirectToAction(nameof(Index));
@@ -146,19 +156,20 @@ namespace CuaHangNhacCu.Controllers
                 existingAddress.Line2 = model.Line2;
                 existingAddress.City = model.City;
                 existingAddress.Province = model.Province;
+                existingAddress.IsDefault = model.IsDefault;
             }
 
             await _context.SaveChangesAsync();
             TempData["SuccessMessage"] = "Cập nhật địa chỉ thành công!";
             return RedirectToAction(nameof(Index));
         }
+
         [HttpGet]
         public IActionResult ChangePassword()
         {
             return View();
         }
 
-        // POST: /Profile/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
@@ -190,6 +201,5 @@ namespace CuaHangNhacCu.Controllers
 
             return View(model);
         }
-
     }
 }
