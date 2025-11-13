@@ -94,7 +94,6 @@
                 <td colspan="6" class="p-0" style="border: none;">
                     <div id="@collapseId" class="collapse">
                         @{
-                            // 1. Tái sử dụng logic mapping DTO từ Task #7
                             var dto = new OrderSummaryDto
                             {
                                 OrderId = order.Id,
@@ -111,9 +110,6 @@
                                     ProductName = i.Product.Name
                                 }).ToList()
                             };
-
-                            // 2. Tái sử dụng code HTML chi tiết từ Task #7
-                            // (Chỉ copy phần chi tiết, bỏ qua thanh hành động 'Hủy Đơn')
                         }
                         <div class="card-body details-section p-4" style="background-color: #fdfdfd;">
                             <h6><i class="bi bi-file-text"></i> Chi tiết các mặt hàng đã đặt</h6>

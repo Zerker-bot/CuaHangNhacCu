@@ -6,7 +6,7 @@ namespace CuaHangNhacCu.ViewModels.Profile
 {
     public class ProfileViewModel
     {
-        public string AvatarUrl { get; set; }
+        public string? AvatarUrl { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập họ tên")]
         [Display(Name = "Họ Tên")]

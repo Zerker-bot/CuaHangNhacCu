@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CuaHangNhacCu.Areas.Admin.Controllers
 {
@@ -14,11 +15,13 @@ namespace CuaHangNhacCu.Areas.Admin.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public UsersController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public UsersController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _signInManager = signInManager;
         }
 
         public async Task<IActionResult> Index()
@@ -61,7 +64,7 @@ namespace CuaHangNhacCu.Areas.Admin.Controllers
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, model.Role);
-
+                    TempData["SuccessMessage"] = "Tạo tài khoản mới thành công!";
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -156,6 +159,21 @@ namespace CuaHangNhacCu.Areas.Admin.Controllers
                 await _userManager.AddToRoleAsync(user, model.CurrentRole);
             }
 
+            var currentAdminUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            bool isEditingSelf = (user.Id == currentAdminUserId);
+
+            bool isNoLongerAdmin = (model.CurrentRole != "Admin");
+
+            if (isEditingSelf && isNoLongerAdmin)
+            {
+                TempData["SuccessMessage"] = "Bạn đã tự thay đổi vai trò của mình và đã được đăng xuất.";
+
+                await _signInManager.SignOutAsync();
+
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
+
+            TempData["SuccessMessage"] = "Cập nhật tài khoản thành công!";
             return RedirectToAction(nameof(Index));
         }
         //GET: Delete
@@ -180,13 +198,37 @@ namespace CuaHangNhacCu.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-
-            if (user != null)
+            if (user == null)
             {
-                await _userManager.DeleteAsync(user);
+                return NotFound();
             }
 
-            return RedirectToAction(nameof(Index));
+            var currentAdminUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            bool isDeletingSelf = (user.Id == currentAdminUserId);
+
+            var result = await _userManager.DeleteAsync(user);
+
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = $"Đã xóa tài khoản {user.UserName} thành công.";
+
+                if (isDeletingSelf)
+                {
+                    await _signInManager.SignOutAsync();
+
+                    return RedirectToAction("Index", "Home", new { area = "" });
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData["ErrorMessage"] = "Xóa tài khoản thất bại.";
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+            return RedirectToAction(nameof(Index)); 
         }
     }
 }
