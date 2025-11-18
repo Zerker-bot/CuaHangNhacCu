@@ -62,8 +62,16 @@ namespace CuaHangNhacCu.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,Cost,IsPublished,Quantity,CreatedAt,UpdatedAt,CategoryId,BrandId,SupplierId")] Product product)
         {
+            ModelState.Remove("Brand");
+            ModelState.Remove("Category");
+
+            // Bỏ qua validate ngày tháng (vì ta sẽ tự gán bên dưới)
+            ModelState.Remove("CreatedAt");
+            ModelState.Remove("UpdatedAt");
             if (ModelState.IsValid)
             {
+                product.CreatedAt = DateTime.Now;
+                product.UpdatedAt = DateTime.Now;
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

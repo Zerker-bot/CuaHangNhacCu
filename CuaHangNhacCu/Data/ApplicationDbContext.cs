@@ -20,6 +20,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<Cart> Carts { get; set; } = null!;
     public DbSet<CartItem> CartItems { get; set; } = null!;
     public DbSet<Review> Reviews { get; set; } = null!;
+    //public DbSet<Financial>Financials { get; set; } = null!;
 
 
     protected override void OnModelCreating(ModelBuilder builder)
