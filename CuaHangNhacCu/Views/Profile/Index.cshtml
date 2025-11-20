@@ -1,94 +1,130 @@
 ﻿@model CuaHangNhacCu.ViewModels.Profile.ProfileViewModel
 @{
-    ViewData["Title"] = "Thông tin khách hàng";
+    ViewData["Title"] = "Hồ sơ người dùng";
 }
 
-<h1 class="text-center">@ViewData["Title"]</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/customer/profile/index.css" />
+}
 
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <form asp-action="Index" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="container profile-section">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold m-0 text-dark">@ViewData["Title"]</h2>
+        <a asp-action="ChangePassword" class="btn btn-danger rounded-pill px-4">
+            <i class="bi bi-key-fill me-2"></i>Đổi mật khẩu
+        </a>
+    </div>
 
-            <div class="mb-3 text-center">
-                <img src="@Model.AvatarUrl" alt="Avatar mặc định" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;" />
-            </div>
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="profile-card">
+                <div class="profile-card-header">
+                    <i class="bi bi-person-circle me-2 text-primary"></i> Thông tin cá nhân
+                </div>
+                <div class="profile-card-body text-center">
+                    <form asp-action="Index" method="post">
+                        <div asp-validation-summary="All" class="text-danger mb-3 small"></div>
 
-            <div class="form-group mb-3">
-                <label asp-for="FullName" class="control-label"></label>
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="text-danger"></span>
-            </div>
+                        <img src="@Model.AvatarUrl" alt="Avatar" class="profile-avatar">
 
-            <div class="form-group mb-3">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
+                        <div class="mb-3 text-start">
+                            <label asp-for="FullName" class="form-label-custom"></label>
+                            <input asp-for="FullName" class="form-control" placeholder="Họ và tên của bạn" />
+                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                        </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" readonly />
-                <span class="form-text text-muted">Email không thể thay đổi.</span>
-            </div>
+                        <div class="mb-3 text-start">
+                            <label asp-for="Email" class="form-label-custom"></label>
+                            <input asp-for="Email" class="form-control bg-light" readonly />
+                            <span class="text-muted small fst-italic">Email không thể thay đổi</span>
+                        </div>
 
-            <div class="form-group mb-3">
-                <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
-            </div>
-        </form>
+                        <div class="mb-4 text-start">
+                            <label asp-for="PhoneNumber" class="form-label-custom"></label>
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="Số điện thoại liên lạc" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                        </div>
 
-        <hr />
-
-        <h3>Địa chỉ Mặc định</h3>
-        <div class="card mb-4">
-            <div class="card-body">
-                <form asp-action="UpdateAddress" asp-controller="Profile" method="post">
-                    <input type="hidden" name="IsDefault" value="True" />
-                    <input type="hidden" name="AddressId" value="@(Model.DefaultAddress?.Id ?? 0)" />
-
-                    <p class="card-text text-success fw-bold">Địa chỉ Mặc định</p>
-
-                    <div class="form-group mb-3">
-                        <label class="control-label">Đường/Số nhà</label>
-                        <input name="Line1" class="form-control" value="@Model.DefaultAddress?.Line1" required />
-                    </div>
-                    <div class="form-group mb-3">
-                        <label class="control-label">Thành phố</label>
-                        <input name="City" class="form-control" value="@Model.DefaultAddress?.City" required />
-                    </div>
-                    <input type="submit" value="Lưu Địa chỉ Mặc định" class="btn btn-sm btn-primary mt-2" />
-                </form>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-save-custom">
+                                <i class="bi bi-save me-2"></i>Lưu thông tin
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
-        <h3>Địa chỉ Tạm thời</h3>
-        <div class="card mb-4">
-            <div class="card-body">
-                <form asp-action="UpdateAddress" asp-controller="Profile" method="post">
-                    <input type="hidden" name="IsDefault" value="False" />
-                    <input type="hidden" name="AddressId" value="@(Model.TemporaryAddress?.Id ?? 0)" />
+        <div class="col-lg-8">
+            <div class="profile-card">
+                <div class="profile-card-header">
+                    <i class="bi bi-geo-alt-fill me-2 text-danger"></i> Địa chỉ
+                </div>
+                <div class="profile-card-body">
+                    @if (Model.DefaultAddress == null && Model.TemporaryAddress == null)
+                    {
+                        <div class="alert alert-warning text-center mb-4 shadow-sm border-warning">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            Bạn chưa cập nhật địa chỉ nào. Vui lòng thêm địa chỉ để thuận tiện mua hàng.
+                        </div>
+                    }
 
-                    <p class="card-text text-info fw-bold">Địa chỉ Tạm thời</p>
+                    <div class="mb-5">
+                        <h6 class="fw-bold text-success mb-3"><i class="bi bi-check-circle-fill me-2"></i>Địa chỉ mặc định</h6>
+                        <div class="p-3 border rounded bg-light">
+                            <form asp-action="UpdateAddress" asp-controller="Profile" method="post">
+                                <input type="hidden" name="IsDefault" value="True" />
+                                <input type="hidden" name="AddressId" value="@(Model.DefaultAddress?.Id ?? 0)" />
 
-                    <div class="form-group mb-3">
-                        <label class="control-label">Đường/Số nhà</label>
-                        <input name="Line1" class="form-control" value="@Model.TemporaryAddress?.Line1" required />
+                                <div class="row g-3">
+                                    <div class="col-md-8">
+                                        <label class="form-label small text-muted">Đường/Số nhà</label>
+                                        <input name="Line1" class="form-control" value="@Model.DefaultAddress?.Line1" placeholder="VD: 123 ĐH An Giang, p.Long Xuyên" required />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small text-muted">Thành phố/Tỉnh</label>
+                                        <input name="City" class="form-control" value="@Model.DefaultAddress?.City" placeholder="VD: An Giang" required />
+                                    </div>
+                                </div>
+                                <div class="text-end mt-3">
+                                    <button type="submit" class="btn btn-sm btn-success px-3">
+                                        <i class="bi bi-geo-fill me-2"></i>Cập nhật địa chỉ
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <div class="form-group mb-3">
-                        <label class="control-label">Thành phố</label>
-                        <input name="City" class="form-control" value="@Model.TemporaryAddress?.City" required />
+
+                    <hr class="text-muted opacity-25">
+
+                    <div>
+                        <h6 class="fw-bold text-info mb-3"><i class="bi bi-building me-2"></i>Địa chỉ khác (Cơ quan/Khác)</h6>
+                        <div class="p-3 border rounded bg-light">
+                            <form asp-action="UpdateAddress" asp-controller="Profile" method="post">
+                                <input type="hidden" name="IsDefault" value="False" />
+                                <input type="hidden" name="AddressId" value="@(Model.TemporaryAddress?.Id ?? 0)" />
+
+                                <div class="row g-3">
+                                    <div class="col-md-8">
+                                        <label class="form-label small text-muted">Đường/Số nhà</label>
+                                        <input name="Line1" class="form-control" value="@Model.TemporaryAddress?.Line1" placeholder="VD: 123 ĐH An Giang, p.Long Xuyên" required />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small text-muted">Thành phố/Tỉnh</label>
+                                        <input name="City" class="form-control" value="@Model.TemporaryAddress?.City" placeholder="VD: An Giang" required />
+                                    </div>
+                                </div>
+                                <div class="text-end mt-3">
+                                    <button type="submit" class="btn btn-sm btn-info text-white px-3">
+                                        <i class="bi bi-geo-fill me-2"></i>Cập nhật địa chỉ
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <input type="submit" value="Lưu Địa chỉ Tạm thời" class="btn btn-sm btn-secondary mt-2" />
-                </form>
+
+                </div>
             </div>
-        </div>
-
-        <hr />
-
-        <div class="mb-3">
-            <h5>Đổi mật khẩu</h5>
-            <p>Bảo mật tài khoản của bạn bằng mật khẩu mới.</p>
-            <a asp-controller="Profile" asp-action="ChangePassword" class="btn btn-outline-secondary">Đổi mật khẩu</a>
         </div>
     </div>
 </div>

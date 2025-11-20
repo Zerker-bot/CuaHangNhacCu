@@ -1,4 +1,16 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using CuaHangNhacCu.Models
+@inject UserManager<User> UserManager
+
+@{
+    User? currentUser = null;
+    if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        currentUser = await UserManager.GetUserAsync(User);
+    }
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -56,13 +68,15 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link text-muted">
-                    <i class=""></i> Trống
+                <a asp-controller="Orders" asp-action="Index"
+                   class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Orders" ? "active" : "") ">
+                    <i class="bi bi-cart-fill"></i> Đơn hàng
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link text-muted">
-                    <i class="p"></i> Trống
+                <a asp-controller="Users" asp-action="Index"
+                   class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Users" ? "active" : "") ">
+                    <i class="bi bi-people-fill"></i> Người dùng
                 </a>
             </li>
         </ul>
@@ -87,11 +101,23 @@
             </div>
 
             <div class="header-controls">
+                <a asp-controller="Profile" asp-action="Index" class="text-decoration-none text-dark">
+                    <div class="user-profile d-flex align-items-center gap-2">
+                        <img src="https://avatar.iran.liara.run/public/43" alt="User"
+                             class="rounded-circle" style="width: 32px; height: 32px; object-fit: cover;">
 
-                <div class="user-profile">
-                    <img src="https://avatar.iran.liara.run/public/43" alt="User">
-                    Admin
-                </div>
+                        <span class="fw-semibold">
+                            @if (currentUser != null)
+                            {
+                                <text>Admin: @currentUser.FullName</text>
+                            }
+                            else
+                            {
+                                <text>Admin</text>
+                            }
+                        </span>
+                    </div>
+                </a>
             </div>
         </div>
 

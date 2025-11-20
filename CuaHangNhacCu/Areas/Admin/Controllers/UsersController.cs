@@ -176,23 +176,7 @@ namespace CuaHangNhacCu.Areas.Admin.Controllers
             TempData["SuccessMessage"] = "Cập nhật tài khoản thành công!";
             return RedirectToAction(nameof(Index));
         }
-        //GET: Delete
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var user = await _userManager.FindByIdAsync(id);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
-        }
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
