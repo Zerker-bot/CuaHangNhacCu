@@ -46,8 +46,6 @@ public class Product
     
     public Brand Brand { get; set; }
 
-    [Display(Name = "Nhà cung cấp")]
-    public int? SupplierId { get; set; }
     public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
 }
