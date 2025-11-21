@@ -33,7 +33,7 @@ namespace CuaHangNhacCu.Areas.Admin.Controllers
             var viewModel = new OrderIndexViewModel
             {
                 Orders = await ordersQuery.ToListAsync(),
-                CurrentStatus = status
+                CurrentStatus = status      
             };
 
             return View(viewModel);
