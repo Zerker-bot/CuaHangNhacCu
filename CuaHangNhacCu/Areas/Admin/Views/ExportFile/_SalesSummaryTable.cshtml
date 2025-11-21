@@ -1,0 +1,70 @@
+﻿@* File: _SalesSummaryTable.cshtml *@
+
+@* Model sẽ là một danh sách các đối tượng (như bạn đã trả về trong Controller) *@
+@model IEnumerable<dynamic>
+
+@{
+    // 1. KHAI BÁO VÀ TÍNH TOÁN BIẾN TRONG KHỐI CODE C#
+    decimal totalRevenueAll = 0;
+    int totalOrdersAll = 0;
+
+    if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            totalRevenueAll += (decimal)item.TotalRevenue;
+            totalOrdersAll += (int)item.TotalOrders;
+        }
+    }
+}
+
+<div class="card shadow-lg mt-4" id="sales-summary-card">
+    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">@ViewData["Title"]</h4>
+        <button type="button" class="btn btn-sm btn-light" id="btn-hide-summary">
+            <i class="fas fa-times"></i> Đóng Bảng
+        </button>
+    </div>
+    <div class="card-body">
+        @if (Model != null && Model.Any())
+        {
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th style="width: 40%;">Kỳ</th>
+                        <th style="width: 30%;" class="text-center">Tổng Đơn Hàng</th>
+                        <th style="width: 30%;" class="text-end">Tổng Doanh Thu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Key</td>
+                            <td class="text-center">@item.TotalOrders</td>
+                            <td class="text-end">
+                                @string.Format("{0:N0} VNĐ", item.TotalRevenue)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+                <tfoot>
+                    <tr class="table-success fw-bold">
+                        <td>TỔNG CỘNG</td>
+                        <td class="text-center">@totalOrdersAll</td>
+                        <td class="text-end">
+                            @string.Format("{0:N0} VNĐ", totalRevenueAll)
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-warning" role="alert">
+                <i class="fas fa-exclamation-triangle"></i> Không có dữ liệu đơn hàng được giao (Delivered) trong khoảng thời gian này.
+            </div>
+        }
+    </div>
+</div>
