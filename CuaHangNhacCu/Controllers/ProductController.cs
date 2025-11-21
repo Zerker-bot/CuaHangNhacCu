@@ -1,7 +1,9 @@
 using CuaHangNhacCu.Data;
+using CuaHangNhacCu.Dto.Review;
 using CuaHangNhacCu.Models;
 using CuaHangNhacCu.ViewModels.Product;
 using CuaHangNhacCu.ViewModels.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -115,6 +117,43 @@ public class ProductController : Controller
         };
 
         return View(viewModel);
+    }
+
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateReview([FromForm] CreateReviewDto reviewDto, int productId) {
+        var userId = HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (userId == null)
+        {
+            return Unauthorized();
+        }
+
+        var product = await _ctx.Products.FindAsync(productId);
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return RedirectToAction("Detail", new { id = productId });
+        }
+
+        var review = new Review
+        {
+            ProductId = productId,
+            UserId = userId,
+            Rating = reviewDto.Rating,
+            Content = reviewDto.Content,
+            CreatedAt = DateTime.UtcNow,
+            IsApproved = false
+        };
+
+        _ctx.Reviews.Add(review);
+        await _ctx.SaveChangesAsync();
+
+        return RedirectToAction("Detail", new { id = productId });
     }
 
 }

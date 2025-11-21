@@ -1,4 +1,4 @@
-using CuaHangNhacCu.Cli;
+﻿using CuaHangNhacCu.Cli;
 using CuaHangNhacCu.Data;
 using CuaHangNhacCu.ServicesRegisters;
 using Microsoft.EntityFrameworkCore;
@@ -42,11 +42,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

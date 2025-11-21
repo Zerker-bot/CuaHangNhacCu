@@ -6,24 +6,48 @@ public class CliHandler
 {
     public static async Task Handle(string[] args, WebApplication app)
     {
+        using var scope = app.Services.CreateScope(); //line 9, 10, Lấy services 1 lần, đỡ phải lặp lại using var trong các hàm
+        var services = scope.ServiceProvider;         
+
         switch (args[0].ToLower())
         {
             case "seed-admin":
-                await SeedAdmin(app);
+                await SeedAdmin(services);
                 break;
             case "seed-data":
-                await SeedData(app);
+                await SeedData(services);
                 break;
+            case "seed-orders":
+                try
+                {
+                    await TestDataSeeder.SeedOrdersAsync(services);
+                }
+                catch (Exception ex) { Console.WriteLine("❌ Error: " + ex.Message); }
+                break;
+            case "clear-orders":
+                try
+                {
+                    await TestDataSeeder.ClearOrdersAsync(services);
+                }
+                catch (Exception ex) { Console.WriteLine("❌ Error: " + ex.Message); }
+                break;
+            case "seed-cart":
+                try { await TestDataSeeder.SeedCartAsync(services); } 
+                catch (Exception ex) { Console.WriteLine("❌ Error: " + ex.Message); }
+                break;
+            case "clear-cart":
+                try { await TestDataSeeder.ClearCartAsync(services); } 
+                catch (Exception ex) { Console.WriteLine("❌ Error: " + ex.Message); }
+                break;
+
             default:
                 Console.WriteLine("Unknown Command");
                 break;
         }
     }
 
-    public static async Task SeedAdmin(WebApplication app)
+    public static async Task SeedAdmin(IServiceProvider services)
     {
-        using var scope = app.Services.CreateScope();
-        var services = scope.ServiceProvider;
         try
         {
             await SuperAdminSeeder.SeedSuperAdminAsync(services);
@@ -36,10 +60,8 @@ public class CliHandler
     }
 
 
-    public static async Task SeedData(WebApplication app)
+    public static async Task SeedData(IServiceProvider services)
     {
-        using var scope = app.Services.CreateScope();
-        var services = scope.ServiceProvider;
         try
         {
             await DataSeeder.SeedDataAsync(services);

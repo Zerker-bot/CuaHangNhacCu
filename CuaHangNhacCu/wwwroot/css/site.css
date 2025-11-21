@@ -17,9 +17,7 @@ html {
   min-height: 100%;
 }
 
-body {
-  margin-bottom: 60px;
-}
+body {}
 
 :root {
   --gold: #D4AF37;
@@ -47,4 +45,236 @@ body {
   color: white;
   transform: translateY(-2px);
   box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+}
+
+
+main {
+  margin-top: 5rem;
+}
+
+.navbar-brand {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+.hero-section {
+  background-image: url('https://plus.unsplash.com/premium_photo-1669374470059-f7c87c1ae070?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=870');
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: white;
+  padding: 150px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+
+.hero-h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 4.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.btn-gold {
+  background: var(--gold);
+  border: var(--gold);
+  color: var(--black);
+  font-weight: 600;
+  padding: 15px 40px;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+}
+
+.btn-gold:hover {
+  background: var(--gold-dark);
+  border-color: var(--gold-dark);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+}
+
+.category-card {
+  border: none;
+  background: white;
+  transition: all 0.3s ease;
+  height: 100%;
+  overflow: hidden;
+}
+
+.category-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.category-icon {
+  font-size: 3.5rem;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.category-icon svg {
+  fill: var(--gold);
+  width: 56px;
+}
+
+.category-card .card-title {
+  font-family: 'Playfair Display', serif;
+  color: var(--black);
+}
+
+.product-card {
+  border: none;
+  background: white;
+  transition: all 0.3s ease;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.badge-gold {
+  background: var(--gold);
+  color: var(--black);
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.newsletter-section {
+  background: var(--black);
+  color: white;
+}
+
+.newsletter-form .form-control {
+  border-radius: 50px;
+  border: 2px solid var(--gold);
+  background: transparent;
+  color: white;
+  padding: 15px 25px;
+}
+
+.newsletter-form .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.newsletter-btn {
+  border-radius: 50px;
+  padding: 15px 35px;
+  background: var(--gold);
+  border: none;
+  color: var(--black);
+  font-weight: 600;
+}
+
+footer {
+  background: var(--black);
+  color: white;
+}
+
+.social-icons a {
+  color: var(--gold);
+  font-size: 1.5rem;
+  margin: 0 15px;
+  transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: var(--gold-dark);
+  transform: translateY(-3px);
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+}
+
+.auth-container {
+    min-height: calc(100vh - 76px);
+    display: flex;
+    align-items: center;
+    /* background: linear-gradient(135deg, var(--black) 0%, var(--dark-gray) 100%); */
+}
+
+.auth-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    overflow: hidden;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.auth-image {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    height: 300px;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff20"/><circle cx="75" cy="75" r="1.5" fill="%23ffffff10"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+}
+
+.auth-image i {
+    font-size: 6rem;
+    color: rgba(255,255,255,0.9);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 15px;
+    padding: 15px 20px;
+    transition: all 0.3s ease;
+    background: rgba(255,255,255,0.9);
+}
+
+.form-control:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+}
+
+.btn-gold {
+    border-radius: 15px;
+}
+
+
+.auth-link {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-link:hover {
+    color: var(--gold-dark);
+}
+
+.form-check-input:checked {
+    background-color: var(--gold);
+    border-color: var(--gold);
+}
+
+@media (max-width: 768px) {
+    .auth-card { margin: 1rem; }
+    .auth-image { height: 200px; }
+    .auth-image i { font-size: 4rem; }
 }

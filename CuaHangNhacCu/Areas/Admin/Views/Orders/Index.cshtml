@@ -1,0 +1,152 @@
+﻿@model CuaHangNhacCu.Areas.Admin.Models.OrderIndexViewModel
+@using System.ComponentModel.DataAnnotations
+@using CuaHangNhacCu.ViewModels
+@using System.Reflection
+@{
+    ViewData["Title"] = "Quản lý Đơn đặt hàng";
+    var allStatuses = (CuaHangNhacCu.Models.OrderStatus[])Enum.GetValues(typeof(CuaHangNhacCu.Models.OrderStatus));
+
+    string GetDisplayName(Enum enumValue)
+    {
+        return enumValue.GetType()
+                        .GetMember(enumValue.ToString())
+                        .First()
+                        .GetCustomAttribute<DisplayAttribute>()?
+                        .GetName() ?? enumValue.ToString();
+    }
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<ul class="nav nav-tabs mb-3">
+    @foreach (var status in allStatuses)
+    {
+        <li class="nav-item">
+            <a class="nav-link @(Model.CurrentStatus == status ? "active" : "")"
+               asp-action="Index"
+               asp-route-status="@status">
+                @GetDisplayName(status)
+            </a>
+        </li>
+    }
+</ul>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Mã đơn hàng</th>
+            <th>Khách hàng</th>
+            <th>Ngày đặt</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Orders.Count == 0)
+        {
+            <tr>
+                <td colspan="6" class="text-center">Không có đơn hàng nào ở trạng thái này.</td>
+            </tr>
+        }
+
+        @foreach (var order in Model.Orders)
+        {
+            string collapseId = $"collapse-{order.Id}";
+
+            <tr style="cursor: pointer;">
+                <td>@order.Id</td>
+                <td>@(order.User?.FullName ?? "N/A")</td>
+                <td>@order.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@order.Total.ToString("N0") VNĐ</td>
+                <td>
+                    <span class="badge bg-info">@GetDisplayName(order.Status)</span>
+                </td>
+                <td style="min-width: 250px;">
+                    <form asp-action="UpdateStatus" method="post" class="d-inline-flex" onclick="event.stopPropagation();">
+                        <input type="hidden" name="orderId" value="@order.Id" />
+                        <select name="newStatus" class="form-select form-select-sm" style="width: auto;">
+                            @foreach (var status in allStatuses)
+                            {
+                                @if (order.Status == status)
+                                {
+                                    <option value="@status" selected>@GetDisplayName(status)</option>
+                                }
+                                else
+                                {
+                                    <option value="@status">@GetDisplayName(status)</option>
+                                }
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary ms-2">Lưu</button>
+                    </form>
+
+                    <button class="btn btn-sm btn-info ms-2" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#@collapseId"
+                            aria-expanded="false" aria-controls="@collapseId"
+                            onclick="event.stopPropagation();">
+                        Chi tiết
+                    </button>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="6" class="p-0" style="border: none;">
+                    <div id="@collapseId" class="collapse">
+                        @{
+                            var dto = new OrderSummaryDto
+                            {
+                                OrderId = order.Id,
+                                CreatedAt = order.CreatedAt,
+                                Status = order.Status,
+                                Total = order.Total,
+                                ShippingFee = order.ShippingFee,
+                                Discount = order.Discount,
+                                Items = order.Items.Select(i => new OrderItemDto
+                                {
+                                    ProductId = i.ProductId,
+                                    Quantity = i.Quantity,
+                                    UnitPrice = i.UnitPrice,
+                                    ProductName = i.Product.Name
+                                }).ToList()
+                            };
+                        }
+                        <div class="card-body details-section p-4" style="background-color: #fdfdfd;">
+                            <h6><i class="bi bi-file-text"></i> Chi tiết các mặt hàng đã đặt</h6>
+                            <ul class="list-group list-group-flush mb-4">
+                                @foreach (var item in dto.Items)
+                                {
+                                    <li class="list-group-item p-0" style="background: transparent;">
+                                        <div class="d-flex align-items-center">
+                                            <a asp-area="" asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId"
+                                               class="text-dark product-item text-dark text-decoration-none d-flex justify-content-between align-items-center w-100">
+                                                <strong>@item.ProductName</strong>
+                                                <span class="badge bg-secondary ms-2 text-center">@item.Quantity</span>
+                                                <span class="ms-auto">@item.UnitPrice.ToString("N0") VNĐ</span>
+                                            </a>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+
+                            <h6><i class="bi bi-wallet"></i> Tổng tiền</h6>
+                            <div class="row">
+                                <div class="col-6">Tổng giá trị sản phẩm:</div>
+                                <div class="col-6 text-end">
+                                    @dto.Items.Sum(i => i.UnitPrice * i.Quantity).ToString("N0") VNĐ
+                                </div>
+                                <div class="col-6">Phí vận chuyển:</div>
+                                <div class="col-6 text-end text-muted">+ @dto.ShippingFee.ToString("N0") VNĐ</div>
+                                <div class="col-6 text-danger">Chiết khấu:</div>
+                                <div class="col-6 text-end text-danger">- @dto.Discount.ToString("N0") VNĐ</div>
+                                <div class="col-12"><hr class="my-2"></div>
+                                <div class="col-6 fw-bold">TỔNG CỘNG:</div>
+                                <div class="col-6 text-end fw-bold text-success">@dto.Total.ToString("N0") VNĐ</div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

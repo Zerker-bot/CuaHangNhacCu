@@ -178,7 +178,6 @@ namespace CuaHangNhacCu.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -561,7 +560,8 @@ namespace CuaHangNhacCu.Migrations
                 {
                     b.HasOne("CuaHangNhacCu.Models.User", "User")
                         .WithMany("Addresses")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("User");
                 });
@@ -602,9 +602,7 @@ namespace CuaHangNhacCu.Migrations
 
                     b.HasOne("CuaHangNhacCu.Models.User", "User")
                         .WithMany("Orders")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("ShippingAddress");
 

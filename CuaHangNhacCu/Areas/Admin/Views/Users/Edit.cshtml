@@ -1,53 +1,58 @@
 ﻿@model CuaHangNhacCu.Areas.Admin.Models.EditUserViewModel
 @{
-    ViewData["Title"] = "Chỉnh sửa User";
+    ViewData["Title"] = "Chỉnh sửa tài khoản";
 }
 
-<h1>@ViewData["Title"]</h1>
-<h4>@Model.Email</h4>
-<hr />
-<div class="row">
-    <div class="col-md-6">
+<div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+    <h2 class="m-0">@ViewData["Title"]</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-2"></i>Quay lại danh sách
+    </a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-light">
+        <h5 class="m-0">Thông tin tài khoản: @Model.Email</h5>
+    </div>
+
+    <div class="card-body">
         <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+            
             <input type="hidden" asp-for="Id" />
 
-            <div class="form-group mb-3">
-                <label asp-for="FullName" class="control-label"></label>
-                <input asp-for="FullName" class="form-control" />
+            <div class="mb-3">
+                <label asp-for="FullName" class="form-label"></label>
+                <input asp-for="FullName" class="form-control" placeholder="Nhập họ tên" />
                 <span asp-validation-for="FullName" class="text-danger"></span>
             </div>
-
-            <div class="form-group mb-3">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
+            
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" placeholder="Nhập email" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
+            <div class="mb-3">
+                <label asp-for="PhoneNumber" class="form-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" placeholder="Nhập số điện thoại" />
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="CurrentRole" class="control-label">Vai trò</label>
-                <select asp-for="CurrentRole" asp-items="@Model.AllRoles" class="form-control">
+            <div class="mb-3">
+                <label asp-for="CurrentRole" class="form-label">Vai trò</label>
+                <select asp-for="CurrentRole" asp-items="@Model.AllRoles" class="form-select">
                     <option value="">-- Ban User (Xóa mọi vai trò) --</option>
                 </select>
                 <span asp-validation-for="CurrentRole" class="text-danger"></span>
             </div>
 
-            <div class="form-group mb-3">
-                <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
+            <div class="text-end mt-4">
+                <a asp-action="Index" class="btn btn-secondary me-2">Hủy</a>
+                <button type="submit" value="Lưu" class="btn btn-primary">Lưu thay đổi</button>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Quay lại danh sách</a>
 </div>
 
 @section Scripts {
