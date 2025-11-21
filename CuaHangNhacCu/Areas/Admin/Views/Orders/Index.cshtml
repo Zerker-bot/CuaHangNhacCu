@@ -3,7 +3,7 @@
 @using CuaHangNhacCu.ViewModels
 @using System.Reflection
 @{
-    ViewData["Title"] = "Quản lý Đơn đặt hàng";
+    ViewData["Title"] = "Quản lý đơn đặt hàng";
     var allStatuses = (CuaHangNhacCu.Models.OrderStatus[])Enum.GetValues(typeof(CuaHangNhacCu.Models.OrderStatus));
 
     string GetDisplayName(Enum enumValue)

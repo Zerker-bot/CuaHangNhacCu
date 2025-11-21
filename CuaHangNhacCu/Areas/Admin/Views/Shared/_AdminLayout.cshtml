@@ -32,6 +32,12 @@
     <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
 </head>
 <body>
+    @{
+        var user = await UserManager.GetUserAsync(User);
+        var fullName = user?.FullName ?? User.Identity?.Name ?? "Khách hàng";
+        var displayName = fullName.Length > 15 ? fullName.Substring(0, 12) + "..." : fullName;
+        var avatarUrl = "https://avatar.iran.liara.run/public/43";
+    }
     <div id="sidebar" class="sidebar d-flex flex-column p-3">
         <a href="/" class="d-flex align-items: center mb-3 mb-md-0 me-md-auto text-decoration-none">
             <span class="brand-title">Trang quản lý</span>
@@ -46,7 +52,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link text-muted">
+                <a asp-controller="Products" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Products" ? "active" :"")">
                     <i class="bi bi-box"></i> Sản phẩm
                 </a>
             </li>
@@ -63,8 +69,8 @@
                 </a>
             </li>
             <li>
-                <a asp-controller="ExportFile" asp-action="Index" class="nav-link">
-                    <i class=""></i> Xuat File
+                <a asp-controller="ExportFile" asp-action="Index" class="nav-link nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ExportFile" ? "active" : "")">
+                    <i class="bi bi-bar-chart"></i>Thống kê
                 </a>
             </li>
             <li>
@@ -99,7 +105,7 @@
                     <input type="text" class="form-control" placeholder="Search Anything..." />
                 </div>
             </div>
-
+             
             <div class="header-controls">
                 <a asp-controller="Profile" asp-action="Index" class="text-decoration-none text-dark">
                     <div class="user-profile d-flex align-items-center gap-2">
@@ -115,7 +121,8 @@
                             {
                                 <text>Admin</text>
                             }
-                        </span>
+                        </span>                               
+
                     </div>
                 </a>
             </div>
