@@ -278,3 +278,46 @@ footer {
     .auth-image { height: 200px; }
     .auth-image i { font-size: 4rem; }
 }
+
+.nav-btn-fixed {
+    height: 45px;
+    min-width: 50px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-btn-auth {
+    padding: 0 25px;
+}
+
+.cart-badge {
+    top: 5px;
+    right: 5px;
+    font-size: 10px;
+    padding: 4px 6px;
+}
+
+.user-dropdown-toggle {
+    height: 45px;
+    transition: all 0.3s ease;
+}
+
+.user-dropdown-avatar {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+}
+
+.user-greeting {
+    font-size: 11px;
+}
+
+.user-name-display {
+    font-size: 14px;
+}
+
+.user-email-display {
+    font-size: 12px;
+    max-width: 200px;
+}

@@ -5,34 +5,35 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/css/customer/Cart/index.css" />
-
     <link rel="stylesheet" href="~/css/customer/product/detail.css" />
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1 class="fw-bold text-center">@ViewData["Title"]</h1>
 
 @if (!Model.Items.Any())
 {
-    <div class="alert alert-info" role="alert">
-        Giỏ hàng của bạn đang trống.
+    <div class="alert alert-info text-center p-5" role="alert">
+        <i class="bi bi-cart-x fs-1 text-muted"></i>
+        <p class="mt-3 fs-5">Giỏ hàng của bạn đang trống.</p>
+        <a asp-controller="Product" asp-action="Index" class="btn btn-primary mt-2">Tiếp tục mua sắm</a>
     </div>
 }
 else
 {
     @Html.AntiForgeryToken()
 
-    <form asp-controller="Cart" asp-action="PrepareCheckout" method="post">
+    <form asp-controller="Cart" asp-action="PrepareCheckout" method="post" id="cart-form">
 
-        <div class="table-responsive mb-4">
-            <table class="table align-middle">
-                <thead>
+        <div class="table-responsive mb-5">
+            <table class="table align-middle hover-shadow-sm">
+                <thead class="bg-light">
                     <tr>
-                        <th></th>
-                        <th colspan="2">Sản phẩm</th>
-                        <th>Giá</th>
-                        <th style="width: 150px;">Số lượng</th>
-                        <th>Tổng</th>
-                        <th>Thao tác</th>
+                        <th style="width: 5%;"></th>
+                        <th colspan="2" style="width: 40%;">Sản phẩm</th>
+                        <th style="width: 15%;">Đơn giá</th>
+                        <th style="width: 15%;">Số lượng</th>
+                        <th style="width: 15%;">Thành tiền</th>
+                        <th style="width: 10%;"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,30 +41,37 @@ else
                     {
                         <tr class="cart-item-row" id="row-@item.CartItemId">
                             <td>
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center justify-content-center">
                                     <input type="checkbox" name="selectedItems" value="@item.CartItemId"
-                                           class="form-check-input select-item me-3"
+                                           class="form-check-input select-item" style="cursor: pointer; transform: scale(1.2);"
                                            data-price="@item.TotalItemPrice" />
                                 </div>
                             </td>
                             <td>
-                                <img src="@item.ProductImageUrl" alt="@item.ProductName" class="cart-product-img" />
+                                <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId">
+                                    <img src="@item.ProductImageUrl" alt="@item.ProductName" class="cart-product-img border rounded" />
+                                </a>
                             </td>
                             <td>
-                                <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId">@item.ProductName</a>
+                                <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId" class="text-decoration-none text-dark fw-semibold">
+                                    @item.ProductName
+                                </a>
                             </td>
-                            <td>@item.UnitPrice.ToString("N0") VNĐ</td>
+                            <td class="text-muted">@item.UnitPrice.ToString("N0") VNĐ</td>
                             <td>
-                                <div class="input-group input-group-sm" style="width: 120px;">
-                                    <button class="btn btn-outline-dark border-gold quantity-btn" data-type="minus" data-item-id="@item.CartItemId" type="button">-</button>
-                                    <input type="number" class="form-control text-center border-0 quantity-input" value="@item.Quantity" min="1"
-                                           data-item-id="@item.CartItemId" data-unit-price="@item.UnitPrice">
-                                    <button class="btn btn-outline-dark border-gold quantity-btn" data-type="plus" data-item-id="@item.CartItemId" type="button">+</button>
+                                <div class="input-group input-group-sm" style="width: 110px;">
+                                    <button class="btn btn-outline-secondary quantity-btn" data-type="minus" data-item-id="@item.CartItemId" type="button"><i class="bi bi-dash"></i></button>
+                                    <input type="number" class="form-control text-center border-secondary quantity-input" value="@item.Quantity" min="1"
+                                           data-item-id="@item.CartItemId" data-unit-price="@item.UnitPrice" readonly>
+                                    <button class="btn btn-outline-secondary quantity-btn" data-type="plus" data-item-id="@item.CartItemId" type="button"><i class="bi bi-plus"></i></button>
                                 </div>
                             </td>
-                            <td class="item-total-price">@item.TotalItemPrice.ToString("N0") VNĐ</td>
-                            <td>
-                                <a asp-action="Remove" asp-controller="Cart" asp-route-id="@item.CartItemId" class="btn btn-sm btn-outline-danger">Xóa</a>
+                            <td class="fw-bold text-dark item-total-price">@item.TotalItemPrice.ToString("N0") VNĐ</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-sm btn-outline-danger"
+                                        onclick="confirmRemove(event, '@Url.Action("Remove", "Cart", new { id = item.CartItemId })')">
+                                    <i class="bi bi-trash"></i> Xóa
+                                </button>
                             </td>
                         </tr>
                     }
@@ -71,21 +79,25 @@ else
             </table>
         </div>
 
-        <div class="cart-checkout-bar">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="select-all" />
-                <label class="form-check-label" for="select-all">
+        <div class="cart-checkout-bar shadow-lg">
+            <div class="form-check ms-3">
+                <input class="form-check-input" type="checkbox" id="select-all" style="cursor: pointer; transform: scale(1.2);" />
+                <label class="form-check-label ms-2 fw-semibold user-select-none" for="select-all" style="cursor: pointer;">
                     Chọn tất cả (@Model.Items.Count)
                 </label>
             </div>
-            <div class="total-price-group">
-                <span>Tổng thanh toán:</span>
-                <div class="total-price-display" id="selected-total">0 VNĐ</div>
-            </div>
-            <div class="checkout-button-group">
-                <button type="submit" class="btn btn-primary btn-lg" id="btn-checkout" disabled>
-                    Mua hàng
-                </button>
+
+            <div class="d-flex align-items-center gap-4">
+                <div class="total-price-group text-end">
+                    <span class="text-muted small d-block">Tổng thanh toán:</span>
+                    <span class="total-price-display text-danger fw-bold fs-4" id="selected-total">0 VNĐ</span>
+                </div>
+
+                <div class="checkout-button-group me-3">
+                    <button type="submit" class="btn btn-gold text-dark fw-bold px-5 py-2 rounded-pill" id="btn-checkout" disabled>
+                        Mua hàng
+                    </button>
+                </div>
             </div>
         </div>
     </form>
@@ -93,103 +105,7 @@ else
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script>
-        $(document).ready(function () {
-
-            function formatCurrency(number) {
-                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number).replace('₫', 'VNĐ');
-            }
-
-            // Hàm cập nhật tổng tiền
-            function updateCartSummary() {
-                let total = 0;
-                let itemsSelected = 0;
-                let totalItems = $('.select-item').length;
-
-                $('.select-item:checked').each(function () {
-                    total += parseFloat($(this).data('price'));
-                    itemsSelected++;
-                });
-
-                $('#selected-total').text(formatCurrency(total));
-                $('#btn-checkout').prop('disabled', itemsSelected === 0);
-
-                if (itemsSelected === 0) {
-                    $('#select-all').prop('checked', false);
-                    $('#select-all').prop('indeterminate', false);
-                } else if (itemsSelected === totalItems) {
-                    $('#select-all').prop('checked', true);
-                    $('#select-all').prop('indeterminate', false);
-                } else {
-                    $('#select-all').prop('checked', false);
-                    $('#select-all').prop('indeterminate', true);
-                }
-            }
-
-            $('#select-all').on('change', function () {
-                var isChecked = $(this).prop('checked');
-                $('.select-item').prop('checked', isChecked);
-                updateCartSummary();
-            });
-
-            $('.select-item').on('change', function () {
-                updateCartSummary();
-            });
-
-            $('.quantity-btn').on('click', function (e) {
-                e.preventDefault(); 
-
-                var button = $(this);
-                var type = button.data('type');
-                var itemId = button.data('item-id');
-                var input = $(`.quantity-input[data-item-id=${itemId}]`);
-                var currentVal = parseInt(input.val());
-
-                if (type === 'plus') {
-                    currentVal++;
-                } else if (type === 'minus' && currentVal > 1) {
-                    currentVal--;
-                } else if (type === 'minus' && currentVal === 1) {
-                    return;
-                }
-
-                input.val(currentVal);
-                updateQuantityOnServer(itemId, currentVal);
-            });
-
-            function updateQuantityOnServer(cartItemId, newQuantity) {
-                var token = $('input[name="__RequestVerificationToken"]').val();
-
-                fetch('/Cart/UpdateQuantity', {
-                    method: 'POST',
-                    headers: {
-                        'RequestVerificationToken': token,
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: `cartItemId=${cartItemId}&newQuantity=${newQuantity}`
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(err => { throw new Error(err.message); });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        var row = $(`#row-${cartItemId}`);
-                        row.find('.item-total-price').text(data.newItemTotalFormatted);
-                        row.find('.select-item').data('price', data.newItemTotal);
-
-                        updateCartSummary();
-                    }
-                })
-                .catch(error => {
-                    alert('Lỗi: ' + error.message);
-                });
-            }
-
-            updateCartSummary();
-        });
-    </script>
+    <script src="~/js/cart.js" asp-append-version="true"></script>
 }
