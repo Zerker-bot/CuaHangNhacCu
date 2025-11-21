@@ -10,6 +10,7 @@
 
 @{
     int cartCount = 0;
+    int pendingOrdersCount = 0;
     if (SignInManager.IsSignedIn(User))
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -20,6 +21,12 @@
             if (cart != null)
             {
                 cartCount = cart.Items.Sum(i => i.Quantity);
+            }
+
+            if (User.IsInRole("Admin"))
+            {
+                pendingOrdersCount = await _context.Orders
+                                            .CountAsync(o => o.Status == OrderStatus.Pending);
             }
         }
     }
@@ -32,6 +39,31 @@
         var fullName = user?.FullName ?? User.Identity?.Name ?? "Khách hàng";
         var displayName = fullName.Length > 15 ? fullName.Substring(0, 12) + "..." : fullName;
         var avatarUrl = "https://avatar.iran.liara.run/public/43";
+
+        @if (User.IsInRole("Admin"))
+        {
+            <li class="nav-item">
+                <a class="nav-link btn btn-light border rounded-pill px-3 position-relative nav-btn-fixed"
+                   asp-area="Admin" asp-controller="Orders" asp-action="Index">
+
+                    <i class="bi bi-clipboard-data fs-5 text-dark"></i>
+                    <span class="ms-2 d-none d-xl-inline text-dark fw-semibold">Quản lý đơn hàng</span>
+
+                    @if (pendingOrdersCount > 0)
+                    {
+                        <span class="position-absolute badge rounded-circle bg-warning text-dark border border-2 border-white cart-badge">
+                            @pendingOrdersCount
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="position-absolute badge rounded-circle bg-secondary border border-2 border-white cart-badge">
+                            0
+                        </span>
+                    }
+                </a>
+            </li>
+        }
 
         <li class="nav-item">
             <a class="nav-link btn btn-light border rounded-pill px-3 position-relative nav-btn-fixed"

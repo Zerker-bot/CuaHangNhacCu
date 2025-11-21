@@ -30,34 +30,31 @@ namespace CuaHangNhacCu.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
-                return Challenge(); 
+                return Challenge();
             }
 
-            var cart = await _context.Carts
-                .Include(c => c.Items)
-                    .ThenInclude(ci => ci.Product) 
-                .FirstOrDefaultAsync(c => c.UserId == userId);
-
-            var viewModel = new CartViewModel();
-
-            if (cart != null && cart.Items.Any())
-            {
-                foreach (var item in cart.Items)
+            var cartItems = await _context.CartItems
+                .Where(ci => ci.Cart.UserId == userId)
+                .Select(ci => new CartItemDto
                 {
-                    var primaryImage = await _context.ProductImages
-                        .FirstOrDefaultAsync(pi => pi.ProductId == item.ProductId && pi.IsPrimary);
+                    CartItemId = ci.Id,
+                    ProductId = ci.ProductId,
+                    ProductName = ci.Product.Name,
 
-                    viewModel.Items.Add(new CartItemDto
-                    {
-                        CartItemId = item.Id,
-                        ProductId = item.ProductId,
-                        ProductName = item.Product.Name,
-                        ProductImageUrl = primaryImage?.Url ?? "https://placehold.co/100x100/eee/ccc?text=No+Image",
-                        Quantity = item.Quantity,
-                        UnitPrice = item.Product.Price
-                    });
-                }
-            }
+                    ProductImageUrl = _context.ProductImages
+                        .Where(pi => pi.ProductId == ci.ProductId && pi.IsPrimary)
+                        .Select(pi => pi.Url)
+                        .FirstOrDefault() ?? "https://placehold.co/100x100/eee/ccc?text=No+Image",
+
+                    Quantity = ci.Quantity,
+                    UnitPrice = ci.Product.Price
+                })
+                .ToListAsync();
+
+            var viewModel = new CartViewModel
+            {
+                Items = cartItems
+            };
 
             return View(viewModel);
         }

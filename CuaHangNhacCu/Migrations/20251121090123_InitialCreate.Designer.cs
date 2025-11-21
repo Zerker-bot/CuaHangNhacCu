@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CuaHangNhacCu.Data.Migrations
+namespace CuaHangNhacCu.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251108075318_AllowNullUserIdInOrder")]
-    partial class AllowNullUserIdInOrder
+    [Migration("20251121090123_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -253,9 +253,6 @@ namespace CuaHangNhacCu.Data.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SupplierId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
