@@ -48,8 +48,8 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link text-muted">
-                    <i class=""></i> Trống
+                <a asp-controller="ExportFile" asp-action="Index" class="nav-link">
+                    <i class=""></i> Xuat File
                 </a>
             </li>
             <li>
@@ -130,6 +130,11 @@
 
     </script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    
 </body>
 </html>

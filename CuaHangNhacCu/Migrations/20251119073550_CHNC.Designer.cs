@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CuaHangNhacCu.Data.Migrations
+namespace CuaHangNhacCu.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251117135921_aa")]
-    partial class aa
+    [Migration("20251119073550_CHNC")]
+    partial class CHNC
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -155,35 +155,6 @@ namespace CuaHangNhacCu.Data.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("CuaHangNhacCu.Models.FinancialRecord", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TransactionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FinancialRecord");
-                });
-
             modelBuilder.Entity("CuaHangNhacCu.Models.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -283,9 +254,6 @@ namespace CuaHangNhacCu.Data.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SupplierId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
